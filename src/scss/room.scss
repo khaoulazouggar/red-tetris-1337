@@ -332,18 +332,74 @@
   font-family: Verdana;
   font-size: 1.5vh;
   font-family: "ArcadeClassic";
+  padding-right: 2.6vh;
 }
 
 .input-form {
   display: flex;
   padding: 5px;
+  position: relative;
+  align-items: center;
+  justify-content: flex-end;
 }
 
-.messages-field{
+.messages-field {
   display: block;
   flex: 1 1 0%;
   padding: 5px;
   flex-wrap: wrap;
-  overflow: hidden auto;
+  overflow: scroll;
   text-overflow: ellipsis;
+}
+
+.chatsender {
+  color: #7a2d58 !important;
+  font-size: large !important;
+}
+
+.chatmsg {
+  color: white;
+  width: 0px;
+  width: 0;
+  min-width: 100%;
+}
+
+.send-icon {
+  position: absolute;
+  color: #6c6b6b;
+  margin-right: 8px;
+  transition-delay: 5ms;
+  transition: all 1s;
+}
+
+.icon {
+  font-size: unset;
+  transition-delay: 5ms;
+  transition: all 1s;
+}
+
+.icon:hover {
+  font-size: 1.3em;
+  transition: all 1s;
+}
+
+.send-icon:hover {
+  cursor: pointer;
+  color: #7a2d58;
+  transition: all 1s;
+}
+
+ .name-players{
+  display: flex;
+  flex-direction: column;
+  // flex: 1 1 0%;
+  align-items: center;
+  padding: 5px;
+  overflow: scroll;
+  color: white;
+}
+
+.player-room{
+  color: #109910;
+  font-size: large;
 }

@@ -4,20 +4,20 @@ import "../scss/home.scss";
 import "../scss/room.scss";
 
 function Home(props) {
-  const [roomName, setroomName] = useState("");
+  
   const [errRoomname, seterrRoomname] = useState("");
   const [isTrue, setisTrue] = useState(true);
 
   useEffect(() => {
-    roomName ? setisTrue(false) : setisTrue(true);
+    props.data.roomName ? setisTrue(false) : setisTrue(true);
     checkRoomname();
     // eslint-disable-next-line
-  }, [roomName, isTrue]);
+  }, [props.data.roomName, isTrue]);
 
   //handle check Roomname inputs
   const checkRoomname = () => {
-    if (Isvalidname(roomName)) {
-      seterrRoomname(Isvalidname(roomName));
+    if (Isvalidname(props.data.roomName)) {
+      seterrRoomname(Isvalidname(props.data.roomName));
       setisTrue(true);
     } else seterrRoomname("");
   };
@@ -34,9 +34,9 @@ function Home(props) {
               <input
                 className="inputfield"
                 type="text"
-                value={roomName}
+                value={props.data.roomName}
                 onChange={(e) => {
-                  setroomName(e.target.value);
+                  props.data.setroomName(e.target.value);
                 }}
               />
               <fieldset aria-hidden="false">

@@ -1,7 +1,5 @@
-import { useState } from "react";
 
 function Board() {
-  const [row, setrow] = useState([]);
   return (
     <div className="board">
            {[...Array(20)].map((col, key) => (

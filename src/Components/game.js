@@ -1,10 +1,12 @@
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 import Board from "./board";
 import Chat from "./chat";
 import "../scss/home.scss";
 import "../scss/room.scss";
 
 function Game(props) {
+  const [username, setusername] = useState(props.data.username);
+  const [roomName, setroomName] = useState(props.data.roomName);
   useEffect(() => {
     props.data.clicked === 1 ? props.data.setclicked(2) : props.data.setclicked(5);
     // eslint-disable-next-line
@@ -50,7 +52,7 @@ function Game(props) {
           </div>
         </div>
         <div className="chat">
-          <Chat />
+          <Chat data={{username, setusername,roomName,setroomName}}/>
         </div>
       </div>
     </div>

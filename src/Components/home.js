@@ -8,6 +8,7 @@ function Home() {
   const [username, setusername] = useState("");
   const [clicked, setclicked] = useState(0);
   const [created, setcreated] = useState(false);
+  const [roomName, setroomName] = useState("");
 
   return (
     <div className="home">
@@ -16,9 +17,9 @@ function Home() {
         <h1 className="title">Tetris</h1>
         <div className="name-player">{clicked ? username : ""}</div>
       </div>
-      {/* {clicked === 1 ? <Room data={{ created, setcreated}}/> : clicked === 0 ? <Name data={{ username, setusername, clicked, setclicked }} /> : ""} */}
-      {/* {created ? <Game data={{clicked, setclicked}}/> : ""} */}
-      <Game data={{clicked, setclicked}}/>
+      {clicked === 1 ? <Room data={{ created, setcreated, roomName, setroomName}}/> : clicked === 0 ? <Name data={{ username, setusername, clicked, setclicked }} /> : ""}
+      {created ? <Game data={{clicked, setclicked, username, setusername, roomName , setroomName}}/> : ""}
+      {/* <Game data={{clicked, setclicked, username, setusername}}/> */}
     </div>
   );
 }
