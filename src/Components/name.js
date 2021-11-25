@@ -20,11 +20,11 @@ function Name(props) {
     } else seterrusername("");
   };
   const handelName = () => {
-    props.data.setclicked(true);
+    props.data.setclicked(1);
   };
 
   return (
-    <div className="content">
+    <div className="content" data-aos="flip-left" data-aos-duration="1000" data-aos-delay="300">
       <div className="namefield">
         {/* <label
         class="label-field"

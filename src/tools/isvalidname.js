@@ -6,7 +6,7 @@ function Isvalidname(username) {
   }
 
   if (username && !isUsername(username) && username.length < 12) {
-    err = "Input may only contain alpha-numeric characters";
+    err = "Name may only contain alpha-numeric characters";
   } else if (username.length > 12) {
     err = "Name should be under 12 alpha-numeric characters";
   }
