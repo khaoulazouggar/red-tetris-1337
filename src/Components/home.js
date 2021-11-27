@@ -20,6 +20,7 @@ function Home() {
       {clicked === 1 ? <Room data={{ created, setcreated, roomName, setroomName}}/> : clicked === 0 ? <Name data={{ username, setusername, clicked, setclicked }} /> : ""}
       {created ? <Game data={{clicked, setclicked, username, setusername, roomName , setroomName}}/> : ""}
       {/* <Game data={{clicked, setclicked, username, setusername}}/> */}
+      {/* <Room data={{ created, setcreated, roomName, setroomName}}/> */}
     </div>
   );
 }
