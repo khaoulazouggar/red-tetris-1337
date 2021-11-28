@@ -1,5 +1,5 @@
 function Board(props) {
-  console.log(props.data.start)
+  // console.log(props.data.start)
   return (
     <div className="board">
       {[...Array(20)].map((col, key) => (

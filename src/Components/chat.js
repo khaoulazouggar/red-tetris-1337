@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+// import { ClickOutHandler } from "react-onclickout";
+const ClickOutHandler = require("react-onclickout");
 
 function Chat(props) {
   const [message, setmessage] = useState();
@@ -9,6 +11,7 @@ function Chat(props) {
 
   function insetMsg(e) {
     e.preventDefault();
+    props.data.setsubmited(false);
     console.log(message);
     document.getElementById("msg").value = "";
     if (message) {
@@ -38,13 +41,17 @@ function Chat(props) {
         <div className="messages-field">
           <div>
             <div className="player-room">
-              {props.data?.username ? props.data?.username : "khaoula"} joined {props.data?.roomName}
+              {props.data?.username ? props.data?.username : "khaoula"} joined{" "}
+              {props.data?.roomName}
             </div>
             {chat?.map((chatmsg, index) => (
               <div key={index}>
                 <div>
                   <div className="chatmsg">
-                    <span className="chatsender">{props.data?.username ? props.data?.username : "khaoula"} : </span>
+                    <span className="chatsender">
+                      {props.data?.username ? props.data?.username : "khaoula"}{" "}
+                      :{" "}
+                    </span>
                     <span>{chatmsg?.content}</span>
                   </div>
                 </div>
@@ -52,12 +59,22 @@ function Chat(props) {
             ))}
           </div>
         </div>
+        <ClickOutHandler onClickOut={() => props.data.setsubmited(true)}> 
         <form className="input-form" onSubmit={insetMsg}>
-          <input type="text" placeholder="Write  a  message ..." className="input-message" id="msg" onChange={handleChange} />
+          <input
+            type="text"
+            onClick={() => props.data.setsubmited(false)}
+            
+            placeholder="Write  a  message ..."
+            className="input-message"
+            id="msg"
+            onChange={handleChange}
+          />
           <div onClick={(e) => insetMsg(e)} className="send-icon">
             <FontAwesomeIcon icon={faPaperPlane} className="icon" />
           </div>
         </form>
+        </ClickOutHandler>
       </div>
     </div>
   );

@@ -34,7 +34,7 @@
 }
 
 .room-button {
-  width: 10rem;
+  width: 12rem;
   height: 3vh;
   background: none;
   border: 0px;
@@ -280,6 +280,10 @@
   text-overflow: ellipsis;
 }
 
+.messages-field::-webkit-scrollbar {
+  display: none;
+}
+
 .chatsender {
   color: #7a2d58 !important;
   font-size: large !important;
@@ -325,6 +329,10 @@
   padding: 5px;
   overflow: scroll;
   color: white;
+}
+
+.name-players::-webkit-scrollbar {
+  display: none;
 }
 
 .player-room {

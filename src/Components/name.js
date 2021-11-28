@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef} from "react";
 import "../scss/home.scss";
 import Isvalidname from "../tools/isvalidname";
 
@@ -6,7 +6,9 @@ function Name(props) {
   //   const [username, setusername] = useState("");
   const [isTrue, setisTrue] = useState(true);
   const [errusername, seterrusername] = useState("");
+  const nameRef = useRef(null);
   useEffect(() => {
+    nameRef.current.focus();
     props.data.username ? setisTrue(false) : setisTrue(true);
     checkUsername();
     // eslint-disable-next-line
@@ -19,7 +21,9 @@ function Name(props) {
       setisTrue(true);
     } else seterrusername("");
   };
-  const handelName = () => {
+  const handelName = (e) => {
+    e?.preventDefault();
+    if(props.data.username)
     props.data.setclicked(1);
   };
 
@@ -33,7 +37,7 @@ function Name(props) {
       >
         Enter your name...
       </label> */}
-        <div className="input-div">
+        <form className="input-div" onSubmit={handelName}>
           <input
             className="inputfield"
             type="text"
@@ -41,6 +45,7 @@ function Name(props) {
             onChange={(e) => {
               props.data.setusername(e.target.value);
             }}
+            ref={nameRef}
             // placeholder="Enter your name..."
           />
           <fieldset aria-hidden="true">
@@ -48,7 +53,7 @@ function Name(props) {
               <span>Enter your name...</span>
             </legend>
           </fieldset>
-        </div>
+        </form>
 
         <button
           type="submit"

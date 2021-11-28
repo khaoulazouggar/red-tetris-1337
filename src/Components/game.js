@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Board from "./board";
 import Chat from "./chat";
 import "../scss/home.scss";
@@ -8,22 +8,31 @@ function Game(props) {
   const [username, setusername] = useState(props.data.username);
   const [roomName, setroomName] = useState(props.data.roomName);
   const [start, setstart] = useState(true);
+  const [submited, setsubmited] = useState(true);
+  const gameRef = useRef(null);
 
   useEffect(() => {
-    props.data.clicked === 1 ? props.data.setclicked(2) : props.data.setclicked(5);
+    gameRef.current.focus();
+    props.data.clicked === 1
+      ? props.data.setclicked(2)
+      : props.data.setclicked(5);
     // eslint-disable-next-line
   }, []);
   function handleChange(value) {
     console.log(`selected ${value}`);
   }
   function startgame(e) {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && submited) {
       setstart(false);
-    }else
-    console.log("no")
+    } else console.log("no");
   }
   return (
-    <div className="room-field" onKeyPress={startgame} tabIndex="0">
+    <div
+      className="room-field"
+      onKeyPress={startgame}
+      tabIndex="0"
+      ref={gameRef}
+    >
       <div className="right-field" data-aos="fade-up" data-aos-duration="2000">
         <div className="score next-field">
           <p className="next-p">Next</p>
@@ -31,7 +40,11 @@ function Game(props) {
         </div>
         <div className="chat left-chat"></div>
       </div>
-      <div className="left-field game" data-aos="fade-down" data-aos-duration="2000">
+      <div
+        className="left-field game"
+        data-aos="fade-down"
+        data-aos-duration="2000" 
+      >
         <Board data={{ start, setstart }} />
       </div>
 
@@ -60,7 +73,16 @@ function Game(props) {
           </div>
         </div>
         <div className="chat">
-          <Chat data={{ username, setusername, roomName, setroomName }} />
+          <Chat
+            data={{
+              username,
+              setusername,
+              roomName,
+              setroomName,
+              submited,
+              setsubmited,
+            }}
+          />
         </div>
       </div>
     </div>

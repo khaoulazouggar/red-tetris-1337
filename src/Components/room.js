@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Isvalidname from "../tools/isvalidname";
 import "../scss/home.scss";
 import "../scss/room.scss";
@@ -6,8 +6,9 @@ import "../scss/room.scss";
 function Home(props) {
   const [errRoomname, seterrRoomname] = useState("");
   const [isTrue, setisTrue] = useState(true);
-
+  const roomRef = useRef(null);
   useEffect(() => {
+    roomRef.current.focus();
     props.data?.roomName ? setisTrue(false) : setisTrue(true);
     checkRoomname();
     // eslint-disable-next-line
@@ -20,14 +21,20 @@ function Home(props) {
       setisTrue(true);
     } else seterrRoomname("");
   };
-  const handelRoom = () => {
-    props.data?.setcreated(true);
+  const handelRoom = (e) => {
+    e?.preventDefault();
+    if (props.data.roomName) props.data?.setcreated(true);
   };
   return (
     <div className="room-field">
       <div className="left-field" data-aos="zoom-in" data-aos-duration="1000">
-        <div className="create-room" data-aos="fade-right" data-aos-duration="2000" data-aos-delay="300">
-          <div className="room-div">
+        <div
+          className="create-room"
+          data-aos="fade-right"
+          data-aos-duration="2000"
+          data-aos-delay="300"
+        >
+          <form className="room-div">
             <div className="input-div">
               <input
                 className="inputfield"
@@ -36,6 +43,8 @@ function Home(props) {
                 onChange={(e) => {
                   props.data?.setroomName(e.target.value);
                 }}
+                ref={roomRef}
+                onSubmit={handelRoom}
               />
               <fieldset aria-hidden="false">
                 <legend className="legend-field">
@@ -56,9 +65,14 @@ function Home(props) {
             <span className="errors" style={{ marginTop: "50px" }}>
               {errRoomname}
             </span>
-          </div>
+          </form>
         </div>
-        <div className="room-list" data-aos="fade-left" data-aos-duration="2000" data-aos-delay="300">
+        <div
+          className="room-list"
+          data-aos="fade-left"
+          data-aos-duration="2000"
+          data-aos-delay="300"
+        >
           <h2 className="room-list-h2">Rooms :</h2>
           <div className="header-list">
             <div className="list-name">
