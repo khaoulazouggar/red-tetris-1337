@@ -3,6 +3,9 @@ import Board from "./board";
 import Chat from "./chat";
 import "../scss/home.scss";
 import "../scss/room.scss";
+import { useStage } from "../hooks/useStage";
+import { usePlayer } from "../hooks/usePlayer";
+import { createStage } from "./gameHelpers";
 
 function Game(props) {
   const [username, setusername] = useState(props.data.username);
@@ -10,7 +13,10 @@ function Game(props) {
   const [start, setstart] = useState(true);
   const [submited, setsubmited] = useState(true);
   const gameRef = useRef(null);
-
+  const [player,updatePlayerPos, resetPlayer] = usePlayer();
+  const [stage, setStage] = useStage(player);
+  const [gameOver, setGameOver] = useState(false);
+  
   useEffect(() => {
     gameRef.current.focus();
     props.data.clicked === 1
@@ -24,14 +30,68 @@ function Game(props) {
   function startgame(e) {
     if (e.key === "Enter" && submited) {
       setstart(false);
+      setStage(createStage());
+    // setDropTime(1000);
+    resetPlayer();
     } else console.log("no");
   }
+  
+  const movePlayer = dir => {
+    // if (!checkCollision(player, stage, { x: dir, y: 0 })) {
+      updatePlayerPos({ x: dir, y: 0 });
+    // }
+  };
+
+  const drop = () => {
+    // // Increase level when player has cleared 10 rows
+    // if (rows > (level + 1) * 10) {
+    //   setLevel(prev => prev + 1);
+    //   // Also increase speed
+    //   setDropTime(1000 / (level + 1) + 200);
+    // }
+
+    // if (!checkCollision(player, stage, { x: 0, y: 1 })) {
+    //   updatePlayerPos({ x: 0, y: 1, collided: false });
+    // } else {
+    //   // Game over!
+    //   if (player.pos.y < 1) {
+    //     console.log('GAME OVER!!!');
+    //     setGameOver(true);
+    //     setDropTime(null);
+    //   }
+    //   updatePlayerPos({ x: 0, y: 0, collided: true });
+    // }
+
+    updatePlayerPos({ x: 0, y: 1, collided: false });
+  };
+
+  const dropPlayer = () => {
+    // setDropTime(null);
+    drop();
+  };
+
+  const move = ({ keyCode }) => {
+    if (!gameOver) {
+      if (keyCode === 37) {
+        movePlayer(-1);
+      } else if (keyCode === 39) {
+        movePlayer(1);
+      } else if (keyCode === 40) {
+        dropPlayer();
+      } 
+      // else if (keyCode === 38) {
+      //   playerRotate(stage, 1);
+      // }
+    }
+  };
+
   return (
     <div
       className="room-field"
       onKeyPress={startgame}
       tabIndex="0"
       ref={gameRef}
+      onKeyDown={e => move(e)}
     >
       <div className="right-field" data-aos="fade-up" data-aos-duration="2000">
         <div className="score next-field">
@@ -45,7 +105,7 @@ function Game(props) {
         data-aos="fade-down"
         data-aos-duration="2000" 
       >
-        <Board data={{ start, setstart }} />
+        <Board data={{ start, setstart, stage }} />
       </div>
 
       <div className="right-field" data-aos="fade-up" data-aos-duration="2000">
