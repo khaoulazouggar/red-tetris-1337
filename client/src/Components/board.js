@@ -1,22 +1,16 @@
-import Stage from "./Stage";
-import { createStage } from "./gameHelpers";
-
-import { useState } from "react";
-
 function Board(props) {
- 
-
-  console.log(createStage())
+  // console.log(props.data.start)
   return (
-    <div >
-      {/* {[...Array(20)].map((col, key) => (
+    <div className="board">
+      {[...Array(20)].map((col, key) => (
         <div className="row" key={key}>
+          <div className="row">
             {[...Array(10)].map((col, key) => (
               <div className="col" key={key}></div>
             ))}
+          </div>
         </div>
-      ))} */}
-      <Stage stage={props.data.stage} />
+      ))}
       {props.data.start ? (
         <div className="overlay">
           <div className="overlay-content">
