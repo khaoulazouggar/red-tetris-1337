@@ -6,7 +6,7 @@ import { useState } from "react";
 function Board(props) {
   console.log(createStage());
   return (
-    <div>
+    <div className="board">
       {/* {[...Array(20)].map((col, key) => (
         <div className="row" key={key}>
             {[...Array(10)].map((col, key) => (
