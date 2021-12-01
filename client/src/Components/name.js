@@ -1,6 +1,7 @@
 import { useEffect, useState,useRef} from "react";
 import "../scss/home.scss";
 import Isvalidname from "../tools/isvalidname";
+import { socket } from "../socket/socket";
 
 function Name(props) {
   //   const [username, setusername] = useState("");
@@ -24,7 +25,11 @@ function Name(props) {
   const handelName = (e) => {
     e?.preventDefault();
     if(props.data.username)
-    props.data.setclicked(1);
+    {
+
+      props.data.setclicked(1);
+      socket.emit("new_user", {username: props.data.username});
+    }
   };
 
   return (

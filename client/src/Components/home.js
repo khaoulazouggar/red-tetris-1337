@@ -3,6 +3,7 @@ import "../scss/home.scss";
 import Name from "../Components/name";
 import Room from "../Components/room";
 import Game from "../Components/game";
+import { socket } from "../socket/socket";
 
 function Home() {
   const [username, setusername] = useState("");
