@@ -1,8 +1,10 @@
+import Stage from "./Stage";
+
 function Board(props) {
   // console.log(props.data.start)
   return (
     <div className="board">
-      {[...Array(20)].map((col, key) => (
+      {/* {[...Array(20)].map((col, key) => (
         <div className="row" key={key}>
           <div className="row">
             {[...Array(10)].map((col, key) => (
@@ -10,7 +12,8 @@ function Board(props) {
             ))}
           </div>
         </div>
-      ))}
+      ))} */}
+      <Stage stage={props.data.stage} />
       {props.data.start ? (
         <div className="overlay">
           {props.data.gameOver ? <h1 className="game-over">GAME OVER</h1> : ""}
