@@ -5,9 +5,9 @@ function Isvalidname(username) {
     return re.test(String(username));
   }
 
-  if (username && !isUsername(username) && username.length < 12) {
+  if (username && !isUsername(username) && username.length <= 12) {
     err = "Name may only contain alpha-numeric characters";
-  } else if (username && username.length > 12) {
+  } else if (username && !isUsername(username) && username.length > 12) {
     err = "Name should be under 12 alpha-numeric characters";
   }
   return err;

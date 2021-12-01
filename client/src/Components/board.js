@@ -13,6 +13,8 @@ function Board(props) {
       ))}
       {props.data.start ? (
         <div className="overlay">
+          {props.data.gameOver ? <h1 className="game-over">GAME OVER</h1> : ""}
+
           <div className="overlay-content">
             <div id="key-up">
               <kbd className="key">up</kbd>
