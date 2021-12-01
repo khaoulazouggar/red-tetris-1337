@@ -4,11 +4,9 @@ import { createStage } from "./gameHelpers";
 import { useState } from "react";
 
 function Board(props) {
- 
-
-  console.log(createStage())
+  console.log(createStage());
   return (
-    <div >
+    <div>
       {/* {[...Array(20)].map((col, key) => (
         <div className="row" key={key}>
             {[...Array(10)].map((col, key) => (
@@ -19,6 +17,8 @@ function Board(props) {
       <Stage stage={props.data.stage} />
       {props.data.start ? (
         <div className="overlay">
+          {props.data.gameOver ? <h1 className="game-over">GAME OVER</h1> : ""}
+
           <div className="overlay-content">
             <div id="key-up">
               <kbd className="key">up</kbd>
