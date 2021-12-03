@@ -8,17 +8,18 @@ import { usePlayer } from "../hooks/usePlayer";
 import { createStage, checkCollision, STAGE_HEIGHT } from "./gameHelpers";
 import { useInterval } from "../hooks/useInterval";
 import { useGameStatus } from "../hooks/useGameStatus";
+import NextPiece from "./NextPiece";
 
 function Game(props) {
   const [username, setusername] = useState(props.data.username);
   const [roomName, setroomName] = useState(props.data.roomName);
   const [start, setstart] = useState(true);
-  const [submited, setsubmited] = useState(true);
-  const gameRef = useRef(null);
-  const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
-  const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
   const [gameOver, setGameOver] = useState(false);
   const [dropTime, setDropTime] = useState(null);
+  const [submited, setsubmited] = useState(true);
+  const gameRef = useRef(null);
+  const [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate] = usePlayer(setGameOver, setstart, setDropTime);
+  const [stage,nextStage, setStage, setNextStage, rowsCleared] = useStage(player, nextPiece, resetPlayer, gameOver);
   const [firstDrop, setfirstDrop] = useState(1);
   const [score, setScore, rows, setRows, level, setLevel] =
     useGameStatus(rowsCleared);
@@ -39,6 +40,7 @@ function Game(props) {
     if (e.key === "Enter" && submited) {
       if (gameOver) {
         setStage(createStage());
+        setNextStage(createStage(4, 4))
         resetPlayer();
       }
       if (firstDrop === 1) {
@@ -51,7 +53,7 @@ function Game(props) {
       setScore(0);
       setLevel(0);
       setRows(0);
-    } else console.log("no");
+    }
   }
 
   // This one starts the game
@@ -135,7 +137,9 @@ function Game(props) {
       <div className="right-field" data-aos="fade-up" data-aos-duration="2000">
         <div className="score next-field">
           <p className="next-p">Next</p>
-          <div className="next"></div>
+          <div className="next">
+            {!start ? <NextPiece stage={nextStage} /> : ''}  
+          </div>
         </div>
         <div className="chat left-chat"></div>
       </div>
