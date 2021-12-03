@@ -1,43 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
-import { socket } from "../socket/socket"
 // import { ClickOutHandler } from "react-onclickout";
 const ClickOutHandler = require("react-onclickout");
 
 function Chat(props) {
   const [message, setmessage] = useState();
   const [chat, setChat] = useState([]);
-  const [roomPlayer, setRoomPlayer] = useState([]);
-  const [playersJoined, setPlayersJoined] = useState([]);
+  const handleChange = (e) => setmessage(e.target.value);
 
-  /*  Socket Area */
-  useEffect(() => {
-    /* Listen for new messages */
-    socket.on("chat", (data) => {
-      setChat((chat) => [...chat, data]);
-    });
-  }, []);
-  /* Listen for players List */
-  socket.on("roomPlayers", (data) => {
-    setRoomPlayer(data);
-  });
-  /* Listener tell us when a player join the room */
-  socket.on("playersJoined", (data) => {
-    setPlayersJoined([...playersJoined, data]);
-  });
-  /* End Socket Area */
-  const handleChange = (e) => {
-    setmessage(e.target.value)
-  };
-
-  const insetMsg = (e) => {
+  function insetMsg(e) {
     e.preventDefault();
     props.data.setsubmited(false);
+    console.log(message);
     document.getElementById("msg").value = "";
     if (message) {
       if (message?.trim() !== "") {
-        socket.emit("send_message", { name: props?.data?.username, message: message, room: props.data.roomName })
+        let newValue = { content: message };
+        let push = chat?.concat(newValue);
+        console.log(push);
+        setChat(push);
         setmessage("");
       }
     }
@@ -49,13 +31,7 @@ function Chat(props) {
           <p>Players</p>
         </div>
         <div className="name-players">
-          {roomPlayer.length > 0 && roomPlayer?.map((player, i) => {
-            return (
-              <div key={i}>
-                {player}
-              </div>
-            );
-          })}
+          <div>{props.data?.username ? props.data?.username : "khaoula"}</div>
         </div>
       </div>
       <div className="messages">
@@ -65,41 +41,38 @@ function Chat(props) {
         <div className="messages-field">
           <div>
             <div className="player-room">
-              {playersJoined.length > 0 && playersJoined?.map((msg, i) => {
-                return (
-                  <div key={i}>{msg}</div>
-                );
-              })}
+              {props.data?.username ? props.data?.username : "khaoula"} joined
+              {props.data?.roomName}
             </div>
             {chat?.map((chatmsg, index) => (
               <div key={index}>
                 <div>
                   <div className="chatmsg">
                     <span className="chatsender">
-                      {chatmsg?.name}
+                      {props.data?.username ? props.data?.username : "khaoula"}
+                      :
                     </span>
-                    <span>{chatmsg?.message}</span>
+                    <span>{chatmsg?.content}</span>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
-        <ClickOutHandler onClickOut={() => props.data.setsubmited(true)}>
-          <form className="input-form" onSubmit={insetMsg}>
-            <input
-              type="text"
-              onClick={() => props.data.setsubmited(false)}
-
-              placeholder="Write  a  message ..."
-              className="input-message"
-              id="msg"
-              onChange={handleChange}
-            />
-            <div onClick={(e) => insetMsg(e)} className="send-icon">
-              <FontAwesomeIcon icon={faPaperPlane} className="icon" />
-            </div>
-          </form>
+        <ClickOutHandler onClickOut={() => props.data.setsubmited(true)}> 
+        <form className="input-form" onSubmit={insetMsg}>
+          <input
+            type="text"
+            onClick={() => props.data.setsubmited(false)}   
+            placeholder="Write  a  message ..."
+            className="input-message"
+            id="msg"
+            onChange={handleChange}
+          />
+          <div onClick={(e) => insetMsg(e)} className="send-icon">
+            <FontAwesomeIcon icon={faPaperPlane} className="icon" />
+          </div>
+        </form>
         </ClickOutHandler>
       </div>
     </div>
