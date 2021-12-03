@@ -16,7 +16,7 @@ function Home(props) {
     }).catch((err) => {
       console.log(err);
     });
-      // eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
   useEffect(() => {
     roomRef.current.focus();
@@ -35,12 +35,9 @@ function Home(props) {
   const handelRoom = (e) => {
     e?.preventDefault();
     if (props.data.roomName) {
-      console.log("khaoula khraya");
       socket.emit("create_room", props.data.roomName);
       props.data?.setcreated(true);
     }
-    // const room = props.data.roomName;
-    // setrooms([...rooms, room]);
   };
   socket.on("room_created", (room) => {
     console.log(room);
@@ -48,7 +45,11 @@ function Home(props) {
 
   });
 
-
+  const joinRoom = (room) => {
+    props.data.setroomName(room)
+    socket.emit("join_room", room);
+    props.data?.setcreated(true);
+  }
   return (
     <div className="room-field">
       <div className="left-field" data-aos="zoom-in" data-aos-duration="1000">
@@ -121,7 +122,7 @@ function Home(props) {
             {rooms.length > 0 && rooms.map((room, i) => {
               return (
 
-                <div className="list-item" key={i}>
+                <div className="list-item" key={i} onClick={() => joinRoom(room)}>
                   <div className="content-list-item">{room}</div>
                   <div className="content-list-item">Solo</div>
                   <div className="content-list-item">1/1</div>

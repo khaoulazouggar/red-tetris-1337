@@ -54,20 +54,20 @@ io.on("connection", async (socket) => {
     socket.on("disconnect", () => {
         console.log("Client Disconnected");
     })
-    socket.on("message", async (data) => {
+    socket.on("send_message", async (data) => {
         console.log("Message Received", data);
-        socket.sendBuffer.push(data)
+        Games.sendMessage(io, data)
         io.emit("message", data);
     })
     socket.on("create_room", async (data) => {
         console.log("Room Created", data);
         rooms = [...rooms, data]
-        socket.join(data.room_id);
-        io.emit("room_created", data);
+        Games.joinRoom(io, socket, data, players)
+        io.emit("room_created", data)
     })
     socket.on("join_room", async (data) => {
         console.log("Room Joined", data);
-        socket.join(data.room);
+        Games.joinRoom(io, socket, data, players)
         io.emit("room_joined", data);
     })
 });
