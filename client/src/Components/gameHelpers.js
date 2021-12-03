@@ -1,8 +1,8 @@
 export const STAGE_WIDTH = 10;
 export const STAGE_HEIGHT = 20;
 
-export const createStage = () =>
-  Array.from(Array(STAGE_HEIGHT), () => Array(STAGE_WIDTH).fill([0, 'clear']));
+export const createStage = (height = STAGE_HEIGHT , width = STAGE_WIDTH) =>
+  Array.from(Array(height), () => Array(width).fill([0, 'clear']));
 
 export const checkCollision = (player, stage, { x: moveX, y: moveY }) => {
   // Using for loops to be able to return (and break). Not possible with forEach
