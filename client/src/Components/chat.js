@@ -15,6 +15,7 @@ function Chat(props) {
   useEffect(() => {
     /* Listen for new messages */
     socket.on("chat", (data) => {
+      console.log("------>", data);
       setChat((chat) => [...chat, data]);
     });
   }, []);
@@ -24,6 +25,7 @@ function Chat(props) {
   });
   /* Listener tell us when a player join the room */
   socket.on("playersJoined", (data) => {
+    console.log("playersJoined", data);
     setPlayersJoined([...playersJoined, data]);
   });
   /* End Socket Area */
@@ -37,7 +39,7 @@ function Chat(props) {
     document.getElementById("msg").value = "";
     if (message) {
       if (message?.trim() !== "") {
-        socket.emit("send_message", { name: props?.data?.username, message: message, room: props.data.roomName })
+        socket.emit("send_message", { name: props?.data?.username, message: message, room: props.data.roomName, type: "chat" });
         setmessage("");
       }
     }
@@ -64,25 +66,25 @@ function Chat(props) {
         </div>
         <div className="messages-field">
           <div>
-            <div className="player-room">
-              {playersJoined.length > 0 && playersJoined?.map((msg, i) => {
-                return (
-                  <div key={i}>{msg}</div>
-                );
-              })}
-            </div>
-            {chat?.map((chatmsg, index) => (
-              <div key={index}>
-                <div>
-                  <div className="chatmsg">
-                    <span className="chatsender">
-                      {chatmsg?.name}
-                    </span>
-                    <span>{chatmsg?.message}</span>
+            {chat?.map((chatmsg, index) => {
+              return (
+                chatmsg.type === "joined" ? <div className="player-room" key={index}>
+                  {chatmsg.message}
+
+                </div> : <div key={index}>
+                  <div>
+                    <div className="chatmsg">
+                      <span className="chatsender">
+                        {chatmsg?.name} : 
+                      </span>
+                      <span> {chatmsg?.message}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              )
+            }
+
+            )}
           </div>
         </div>
         <ClickOutHandler onClickOut={() => props.data.setsubmited(true)}>
