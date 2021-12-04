@@ -2,8 +2,9 @@ import { useEffect, useState, useRef } from "react";
 import Isvalidname from "../tools/isvalidname";
 import "../scss/home.scss";
 import "../scss/room.scss";
-import { socket } from '../socket/socket'
+import { socket } from "../socket/socket";
 import Api from "../socket/Api";
+import { toast } from "react-toastify";
 
 function Home(props) {
   const [errRoomname, seterrRoomname] = useState("");
@@ -11,11 +12,14 @@ function Home(props) {
   const [isTrue, setisTrue] = useState(true);
   const roomRef = useRef(null);
   useEffect(() => {
-    Api().get("/rooms").then((res) => {
-      setrooms(res?.data);
-    }).catch((err) => {
-      console.log(err);
-    });
+    Api()
+      .get("/rooms")
+      .then((res) => {
+        setrooms(res?.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     // eslint-disable-next-line
   }, []);
   useEffect(() => {
@@ -42,14 +46,47 @@ function Home(props) {
   socket.on("room_created", (room) => {
     console.log(room);
     setrooms([...rooms, room]);
-
   });
 
   const joinRoom = (room) => {
-    props.data.setroomName(room)
-    socket.emit("join_room", room);
-    props.data?.setcreated(true);
-  }
+    if (props.data.mode === "solo") {
+      console.log("here")
+      
+      toast("This is a solo room", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else if (props.data.mode === "4/4") {
+      toast("this room is full", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else if (props.data.mode === "batlle" && props.data.start === "In game") {
+      toast("this room is in game", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else {
+      props.data.setroomName(room);
+      socket.emit("join_room", room);
+      props.data?.setcreated(true);
+    }
+  };
   return (
     <div className="room-field">
       <div className="left-field" data-aos="zoom-in" data-aos-duration="1000">
@@ -114,23 +151,29 @@ function Home(props) {
             </div>
           </div>
           <div className="body-list">
-
             {/* <div className="content-list-item">khaoula</div>
               <div className="content-list-item">Solo</div>
               <div className="content-list-item">1/1</div>
               <div className="content-list-item">In game</div> */}
-            {rooms.length > 0 && rooms.map((room, i) => {
-              return (
-
-                <div className="list-item" key={i} onClick={() => joinRoom(room)}>
-                  <div className="content-list-item">{room}</div>
-                  <div className="content-list-item">Solo</div>
-                  <div className="content-list-item">1/1</div>
-                  <div className="content-list-item">In game</div>
-                </div>
-
-              );
-            })}
+            {rooms.length > 0 &&
+              rooms.map((room, i) => {
+                return (
+                  <div
+                    className="list-item"
+                    key={i}
+                    onClick={() => joinRoom(room)}
+                  >
+                    <div className="content-list-item">{room}</div>
+                    <div className="content-list-item">{props.data.mode}</div>
+                    <div className="content-list-item">
+                      {props.data.mode === "solo" ? "1/1" : "1/4"}
+                    </div>
+                    <div className="content-list-item">
+                      {props.data.start ? "In Menu" : "In game"}
+                    </div>
+                  </div>
+                );
+              })}
           </div>
         </div>
       </div>

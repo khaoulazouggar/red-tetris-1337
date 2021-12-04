@@ -132,7 +132,7 @@ export const usePlayer = (setGameOver, setstart, setDropTime) => {
       tetromino: randomTetromino().shape,
       collided: false,
     });
-  }, []);
+  }, [setGameOver,setstart, setDropTime]);
 
   return [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate];
 };

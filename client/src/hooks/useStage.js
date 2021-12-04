@@ -25,17 +25,33 @@ export const useStage = (player,nextPiece, resetPlayer, gameOver) => {
         row.map((cell) => (cell[1] === "clear" ? [0, "clear"] : cell))
       );
 
+      console.log(player.tetromino)
       // Then draw the tetromino
       player.tetromino.forEach((row, y) => {
         row.forEach((value, x) => {
           if (value !== 0) {
-            newStage[y + player.pos.y][x + player.pos.x] = [
-              value,
-              `${player.collided ? "merged" : "clear"}`,
-            ];
+            // if(newStage[y + player.pos.y][x + player.pos.x].toString() === [0, "clear"].toString())
+              newStage[y + player.pos.y][x + player.pos.x] = [
+                value,
+                `${player.collided ? "merged" : "clear"}`,
+              ];
           }
         });
       });
+
+      // for (let y = 0; y < player.tetromino.length; y += 1){
+      //   for (let x = player.tetromino[y].length-1; x >= 0; x -= 1) {
+      //     if (player.tetromino[y][x] !== 0) {
+      //       if(newStage[y + player.pos.y][x + player.pos.x].toString() === [0, "clear"].toString()){
+      //         newStage[y + player.pos.y][x + player.pos.x] = [
+      //           player.tetromino[y][x],
+      //           `${player.collided ? "merged" : "clear"}`,
+      //         ];
+      //       }else
+      //       break
+      //     }
+      //   }
+      // }
 
       // Then draw the next tetromino
       nextPiece.tetromino.forEach((row, y) => {
@@ -66,7 +82,8 @@ export const useStage = (player,nextPiece, resetPlayer, gameOver) => {
     player.tetromino,
     resetPlayer,
     nextPiece,
-    nextStage
+    nextStage,
+    gameOver
   ]);
 
   return [stage, nextStage, setStage, setNextStage, rowsCleared];

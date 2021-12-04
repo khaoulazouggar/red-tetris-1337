@@ -9,17 +9,26 @@ import { createStage, checkCollision, STAGE_HEIGHT } from "./gameHelpers";
 import { useInterval } from "../hooks/useInterval";
 import { useGameStatus } from "../hooks/useGameStatus";
 import NextPiece from "./NextPiece";
+import PlayersStage from "./PlayersStage";
 
 function Game(props) {
   const [username, setusername] = useState(props.data.username);
   const [roomName, setroomName] = useState(props.data.roomName);
-  const [start, setstart] = useState(true);
+  // const [start, setstart] = useState(true);
+  const start = props.data.start
+  const setstart = props.data.setstart
   const [gameOver, setGameOver] = useState(false);
   const [dropTime, setDropTime] = useState(null);
   const [submited, setsubmited] = useState(true);
   const gameRef = useRef(null);
-  const [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate] = usePlayer(setGameOver, setstart, setDropTime);
-  const [stage,nextStage, setStage, setNextStage, rowsCleared] = useStage(player, nextPiece, resetPlayer, gameOver);
+  const [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate] =
+    usePlayer(setGameOver, setstart, setDropTime);
+  const [stage, nextStage, setStage, setNextStage, rowsCleared] = useStage(
+    player,
+    nextPiece,
+    resetPlayer,
+    gameOver
+  );
   const [firstDrop, setfirstDrop] = useState(1);
   const [score, setScore, rows, setRows, level, setLevel] =
     useGameStatus(rowsCleared);
@@ -32,15 +41,16 @@ function Game(props) {
     // eslint-disable-next-line
   }, []);
 
-  function handleChange(value) {
-    console.log(`selected ${value}`);
+  function handleChange(event) {
+    console.log(event.target.value);
+    props.data.setmode(event.target.value)
   }
 
   function startgame(e) {
     if (e.key === "Enter" && submited) {
       if (gameOver) {
         setStage(createStage());
-        setNextStage(createStage(4, 4))
+        setNextStage(createStage(4, 4));
         resetPlayer();
       }
       if (firstDrop === 1) {
@@ -97,6 +107,7 @@ function Game(props) {
         break;
       }
     }
+    
     for (let i = tmp; i > 0; i--) {
       if (!checkCollision(player, stage, { x: 0, y: i })) {
         updatePlayerPos({ x: 0, y: i, collided: false });
@@ -138,10 +149,32 @@ function Game(props) {
         <div className="score next-field">
           <p className="next-p">Next</p>
           <div className="next">
-            {!start ? <NextPiece stage={nextStage} /> : ''}  
+            {!start ? <NextPiece stage={nextStage} /> : ""}
           </div>
         </div>
-        <div className="chat left-chat"></div>
+        <div className="chat left-chat">
+          <div style={{position: "relative"}}>
+            <span>khaoula</span>
+            <PlayersStage stage={stage} />
+            <div className="players-overlay"></div>
+          </div>
+          <div style={{position: "relative"}}>
+            <span>yassir</span>
+            <PlayersStage stage={stage} />
+            <div className="players-overlay"></div>
+          </div>
+          <div style={{position: "relative"}}>
+            <span>yassir</span>
+            <PlayersStage stage={stage} />
+            <div className="players-overlay"></div>
+          </div>
+          <div style={{position: "relative"}}>
+            <span>khaoula</span>
+            <PlayersStage stage={stage} />
+            <div className="players-overlay"></div>
+          </div>
+         
+        </div>
       </div>
       <div
         className="left-field game"

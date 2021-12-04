@@ -22,9 +22,11 @@ class GamesRoom {
     /*
     **  Tells the room that a player has joined
     */
-    joinedRoomMessage = (io, room, message) => {
+    joinedRoomMessage = (io, room, name, message) => {
         return new Promise((resolve, reject) => {
-            io.to(room).emit('playersJoined', message);
+            const data = { name: name, message: message, type: 'joined' }
+            this.sendMessage(io, { name: name, message: message, type: 'joined' });
+            // io.to(room).emit('playersJoined', message);
         });
     }
     /*
@@ -36,7 +38,7 @@ class GamesRoom {
             console.log(players.some(plyr => plyr.socketId === socket.id));
             socket.join(room);
             this.getClient(io, room, players);
-            this.joinedRoomMessage(io, room, `${player[0].name} joined ${room}`);
+            io.to(room).emit('chat', { message: `${player[0]?.name} joined ${room}`, type: 'joined' })
         });
     }
     /*
@@ -54,7 +56,7 @@ class GamesRoom {
     */
     sendMessage = (io, data) => {
         return new Promise((resolve, reject) => {
-            io.to(data.room).emit('chat', {name: data.name, message: data.message});
+            io.to(data.room).emit('chat', { name: data.name, message: data.message, type: data.type });
             resolve(true);
         });
     }
