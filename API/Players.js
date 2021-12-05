@@ -5,15 +5,15 @@ class Players {
         console.log(`${name}'s socket id is ${socketId}`);
         players.push({
             name,
-            socketId
+            socketId,
+            admin: false
         });
         return players;
     }
     deletePlayer = async (socketId, players) => {
-        const player = await players.filters({
-            socketId
-        });
-        return player;
+        console.log(`${socketId} left the game`);
+        players = await players.filter(player => player.socketId !== socketId);
+        return players;
     }
 
 }

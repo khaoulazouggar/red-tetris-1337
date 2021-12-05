@@ -5,11 +5,12 @@ import "../scss/home.scss";
 import "../scss/room.scss";
 import { useStage } from "../hooks/useStage";
 import { usePlayer } from "../hooks/usePlayer";
-import { createStage, checkCollision} from "./gameHelpers";
+import { createStage, checkCollision } from "./gameHelpers";
 import { useInterval } from "../hooks/useInterval";
 import { useGameStatus } from "../hooks/useGameStatus";
 import NextPiece from "./NextPiece";
 import PlayersStage from "./PlayersStage";
+import { socket } from "../socket/socket";
 
 function Game(props) {
   const [username, setusername] = useState(props.data.username);
@@ -21,8 +22,9 @@ function Game(props) {
   const [dropTime, setDropTime] = useState(null);
   const [submited, setsubmited] = useState(true);
   const gameRef = useRef(null);
+  const [tetriminos, setTetriminos] = useState([]);
   const [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate] =
-    usePlayer(setGameOver, setstart, setDropTime);
+    usePlayer(setGameOver, setstart, setDropTime, tetriminos);
   const [stage, nextStage, setStage, setNextStage, rowsCleared] = useStage(
     player,
     nextPiece,
@@ -32,7 +34,36 @@ function Game(props) {
   const [firstDrop, setfirstDrop] = useState(1);
   const [score, setScore, rows, setRows, level, setLevel] =
     useGameStatus(rowsCleared);
+  const [gameStarted, setGameStarted] = useState(false);
+  useEffect(() => {
+    socket.on("startGame", (tetriminos) => {
+      console.log("startGame", tetriminos);
+      setTetriminos(tetriminos);
+      tetriminos[0] && setGameStarted(true);
+    });
+  }, []);
 
+  useEffect(() => {
+    if (gameStarted) {
+      if (gameOver) {
+        console.log("bdina");
+        setStage(createStage());
+        setNextStage(createStage(4, 4));
+        resetPlayer();
+        setGameOver(false);
+      }
+      if (firstDrop === 1) {
+        resetPlayer();
+        setfirstDrop(2);
+      }
+      setstart(false);
+      setGameOver(false);
+      setDropTime(1000);
+      setScore(0);
+      setLevel(0);
+      setRows(0);
+    }
+  }, [gameStarted]);
   useEffect(() => {
     gameRef.current.focus();
     props.data.clicked === 1
@@ -46,23 +77,10 @@ function Game(props) {
     props.data.setmode(event.target.value)
   }
 
+
   function startgame(e) {
     if (e.key === "Enter" && submited) {
-      if (gameOver) {
-        setStage(createStage());
-        setNextStage(createStage(4, 4));
-        resetPlayer();
-      }
-      if (firstDrop === 1) {
-        resetPlayer();
-        setfirstDrop(2);
-      }
-      setstart(false);
-      setGameOver(false);
-      setDropTime(1000);
-      setScore(0);
-      setLevel(0);
-      setRows(0);
+      socket.emit("startgame", { room: props.data.roomName });
     }
   }
 
@@ -101,18 +119,18 @@ function Game(props) {
 
   const hardDrop = () => {
     let tmp = 0;
-    while(!checkCollision(player, stage, { x: 0, y: tmp }))
-    tmp += 1
+    while (!checkCollision(player, stage, { x: 0, y: tmp }))
+      tmp += 1
     console.log(tmp)
-    updatePlayerPos({ x: 0, y: tmp-1, collided: false });
-    
+    updatePlayerPos({ x: 0, y: tmp - 1, collided: false });
+
     // for (let i = 0; i < STAGE_HEIGHT; i++) {
     //   if (checkCollision(player, stage, { x: 0, y: i })) {
     //     tmp = i;
     //     break;
     //   }
     // }
-    
+
     // for (let i = tmp; i > 0; i--) {
     //   if (!checkCollision(player, stage, { x: 0, y: i })) {
     //     updatePlayerPos({ x: 0, y: i, collided: false });
@@ -159,28 +177,28 @@ function Game(props) {
         </div>
         <div className="chat left-chat">
           <div className="players-field">
-          <div style={{position: "relative" , margin: "10px"}}>
-            <span>khaoula</span>
-            <PlayersStage stage={stage} />
-            <div className="players-overlay"></div>
+            <div style={{ position: "relative", margin: "10px" }}>
+              <span>khaoula</span>
+              <PlayersStage stage={stage} />
+              <div className="players-overlay"></div>
+            </div>
+            <div style={{ position: "relative", margin: "10px" }}>
+              <span>yassir</span>
+              <PlayersStage stage={stage} />
+              <div className="players-overlay"></div>
+            </div>
+            <div style={{ position: "relative", margin: "10px" }}>
+              <span>yassir</span>
+              <PlayersStage stage={stage} />
+              <div className="players-overlay"></div>
+            </div>
+            <div style={{ position: "relative", margin: "10px" }}>
+              <span>khaoula</span>
+              <PlayersStage stage={stage} />
+              <div className="players-overlay"></div>
+            </div>
           </div>
-          <div style={{position: "relative", margin: "10px"}}>
-            <span>yassir</span>
-            <PlayersStage stage={stage} />
-            <div className="players-overlay"></div>
-          </div>
-          <div style={{position: "relative", margin: "10px"}}>
-            <span>yassir</span>
-            <PlayersStage stage={stage} />
-            <div className="players-overlay"></div>
-          </div>
-          <div style={{position: "relative", margin: "10px"}}>
-            <span>khaoula</span>
-            <PlayersStage stage={stage} />
-            <div className="players-overlay"></div>
-          </div>
-          </div>
-         
+
         </div>
       </div>
       <div

@@ -1,14 +1,32 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 import { TETROMINOS, randomTetromino } from "../Components/tetriminos";
 import { STAGE_WIDTH, checkCollision } from "../Components/gameHelpers";
+import { socket } from "../socket/socket";
 
-export const usePlayer = (setGameOver, setstart, setDropTime) => {
+export const usePlayer = (setGameOver, setstart, setDropTime, tetriminos) => {
   const [player, setPlayer] = useState({
     pos: { x: 0, y: 0 },
     tetromino: TETROMINOS[0].shape,
     collided: false,
   });
+  // const [tetriminos, setTetriminos] = useState([]);
+  const [nextTetromino, setNextTetromino] = useState("");
+
+
+
+  // useEffect(() => {
+  //   socket.on("startGame", (tetriminos) => {
+  //     console.log("startGame", tetriminos);
+  //     setTetriminos(tetriminos);
+  //     setNextTetromino(tetriminos[1])
+  //     console.log("-----------------", TETROMINOS[tetriminos[0]].shape);
+  //   });
+  // }, []);
+
+  useEffect(() => {
+    console.log("----------------------------------", tetriminos);
+  }, [tetriminos]);
 
   const [nextPiece, setNextPiece] = useState({
     pos: { x: 0, y: 0 },
@@ -53,38 +71,40 @@ export const usePlayer = (setGameOver, setstart, setDropTime) => {
   };
 
   const resetPlayer = useCallback((stage) => {
-    let tetris = {
-      pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
-      tetromino: randomTetromino().shape,
-      collided: false,
-    };
-    if(stage){
-      if (!checkCollision(tetris, stage, { x: 0, y: 0 })) {
+    if (tetriminos[0]) {
+      let tetris = {
+        pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
+        tetromino: TETROMINOS[tetriminos[0]].shape,
+        collided: false,
+      };
+      if (stage) {
+        if (!checkCollision(tetris, stage, { x: 0, y: 0 })) {
+          setPlayer({
+            pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
+            tetromino: tetris.tetromino,
+            collided: false,
+          });
+        } else {
+          console.log("GAME OVER!!!");
+          setGameOver(true);
+          setstart(true);
+          setDropTime(null);
+        }
+      } else {
         setPlayer({
           pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
           tetromino: tetris.tetromino,
           collided: false,
         });
-      } else {
-        console.log("GAME OVER!!!");
-        setGameOver(true);
-        setstart(true);
-        setDropTime(null);
-        }
-    }else{
-      setPlayer({
-        pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
-        tetromino: tetris.tetromino,
+      }
+
+      setNextPiece({
+        pos: { x: 0, y: 0 },
+        tetromino: randomTetromino().shape,
         collided: false,
       });
     }
-
-    setNextPiece({
-      pos: { x: 0, y: 0 },
-      tetromino: randomTetromino().shape,
-      collided: false,
-    });
-  }, [setGameOver,setstart, setDropTime]);
+  }, [setGameOver, setstart, setDropTime]);
 
   return [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate];
 };
