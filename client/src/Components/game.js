@@ -5,7 +5,7 @@ import "../scss/home.scss";
 import "../scss/room.scss";
 import { useStage } from "../hooks/useStage";
 import { usePlayer } from "../hooks/usePlayer";
-import { createStage, checkCollision, STAGE_HEIGHT } from "./gameHelpers";
+import { createStage, checkCollision} from "./gameHelpers";
 import { useInterval } from "../hooks/useInterval";
 import { useGameStatus } from "../hooks/useGameStatus";
 import NextPiece from "./NextPiece";
@@ -103,19 +103,24 @@ function Game(props) {
 
   const hardDrop = () => {
     let tmp = 0;
-    for (let i = 0; i < STAGE_HEIGHT; i++) {
-      if (checkCollision(player, stage, { x: 0, y: i })) {
-        tmp = i;
-        break;
-      }
-    }
-
-    for (let i = tmp; i > 0; i--) {
-      if (!checkCollision(player, stage, { x: 0, y: i })) {
-        updatePlayerPos({ x: 0, y: i, collided: false });
-        break;
-      }
-    }
+    while(!checkCollision(player, stage, { x: 0, y: tmp }))
+    tmp += 1
+    console.log(tmp)
+    updatePlayerPos({ x: 0, y: tmp-1, collided: false });
+    
+    // for (let i = 0; i < STAGE_HEIGHT; i++) {
+    //   if (checkCollision(player, stage, { x: 0, y: i })) {
+    //     tmp = i;
+    //     break;
+    //   }
+    // }
+    
+    // for (let i = tmp; i > 0; i--) {
+    //   if (!checkCollision(player, stage, { x: 0, y: i })) {
+    //     updatePlayerPos({ x: 0, y: i, collided: false });
+    //     break;
+    //   }
+    // }
   };
 
   const dropPlayer = () => {
@@ -155,27 +160,29 @@ function Game(props) {
           </div>
         </div>
         <div className="chat left-chat">
-          <div style={{ position: "relative" }}>
+          <div className="players-field">
+          <div style={{position: "relative" , margin: "10px"}}>
             <span>khaoula</span>
             <PlayersStage stage={stage} />
             <div className="players-overlay"></div>
           </div>
-          <div style={{ position: "relative" }}>
+          <div style={{position: "relative", margin: "10px"}}>
             <span>yassir</span>
             <PlayersStage stage={stage} />
             <div className="players-overlay"></div>
           </div>
-          <div style={{ position: "relative" }}>
+          <div style={{position: "relative", margin: "10px"}}>
             <span>yassir</span>
             <PlayersStage stage={stage} />
             <div className="players-overlay"></div>
           </div>
-          <div style={{ position: "relative" }}>
+          <div style={{position: "relative", margin: "10px"}}>
             <span>khaoula</span>
             <PlayersStage stage={stage} />
             <div className="players-overlay"></div>
           </div>
-
+          </div>
+         
         </div>
       </div>
       <div

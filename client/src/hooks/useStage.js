@@ -1,11 +1,22 @@
 import { useState, useEffect } from "react";
-import { createStage } from "../Components/gameHelpers";
+import {
+  checkCollision,
+  createStage,
+  STAGE_HEIGHT,
+} from "../Components/gameHelpers";
 
-export const useStage = (player,nextPiece, resetPlayer, gameOver) => {
+export const useStage = (player, nextPiece,resetPlayer, gameOver) => {
   const [stage, setStage] = useState(createStage());
   const [nextStage, setNextStage] = useState(createStage(4, 4));
   const [rowsCleared, setRowsCleared] = useState(0);
-
+ 
+  let shadow = 0;
+  for (let i = 0; i < STAGE_HEIGHT; i++) {
+    if (checkCollision(player, stage, { x: 0, y: i })) {
+      shadow = i;
+      break;
+    }
+  }
   useEffect(() => {
     setRowsCleared(0);
     const sweepRows = (newStage) =>
@@ -22,36 +33,34 @@ export const useStage = (player,nextPiece, resetPlayer, gameOver) => {
     const updateStage = (prevStage) => {
       // First flush the stage
       const newStage = prevStage.map((row) =>
-        row.map((cell) => (cell[1] === "clear" ? [0, "clear"] : cell))
+        row.map((cell) => (cell[1] === "merged"  && !cell[3] ? cell : [0, "clear"]   ))
       );
 
-      console.log(player.tetromino)
-      // Then draw the tetromino
+      // Then draw the shadow of tetromino
       player.tetromino.forEach((row, y) => {
         row.forEach((value, x) => {
           if (value !== 0) {
-            // if(newStage[y + player.pos.y][x + player.pos.x].toString() === [0, "clear"].toString())
-              newStage[y + player.pos.y][x + player.pos.x] = [
-                value,
-                `${player.collided ? "merged" : "clear"}`,
-              ];
+            newStage[y + shadow + player.pos.y - 1][x + player.pos.x] = [
+              value+"S",
+              `${player.collided ? "merged" : "clear"}`,
+              true,
+            ];
           }
         });
       });
 
-      // for (let y = 0; y < player.tetromino.length; y += 1){
-      //   for (let x = player.tetromino[y].length-1; x >= 0; x -= 1) {
-      //     if (player.tetromino[y][x] !== 0) {
-      //       if(newStage[y + player.pos.y][x + player.pos.x].toString() === [0, "clear"].toString()){
-      //         newStage[y + player.pos.y][x + player.pos.x] = [
-      //           player.tetromino[y][x],
-      //           `${player.collided ? "merged" : "clear"}`,
-      //         ];
-      //       }else
-      //       break
-      //     }
-      //   }
-      // }
+      // Then draw the tetromino
+      player.tetromino.forEach((row, y) => {
+        row.forEach((value, x) => {
+          if (value !== 0) {
+            newStage[y + player.pos.y][x + player.pos.x] = [
+              value,
+              `${player.collided ? "merged" : "clear"}`,
+            ];
+          }
+        });
+      });
+      console.log(shadow);
 
       // Then draw the next tetromino
       nextPiece.tetromino.forEach((row, y) => {
@@ -64,15 +73,16 @@ export const useStage = (player,nextPiece, resetPlayer, gameOver) => {
           }
         });
       });
+      
       // Then check if we got some score if collided
       if (player.collided && !gameOver) {
         resetPlayer(newStage);
-        setNextStage(createStage(4,4))
+        setNextStage(createStage(4, 4));
         return sweepRows(newStage);
       }
       return newStage;
     };
-    // setNextStage(createStage(4, 4));
+
     // Here are the updates
     setStage((prev) => updateStage(prev));
   }, [
@@ -83,7 +93,8 @@ export const useStage = (player,nextPiece, resetPlayer, gameOver) => {
     resetPlayer,
     nextPiece,
     nextStage,
-    gameOver
+    gameOver,
+    shadow
   ]);
 
   return [stage, nextStage, setStage, setNextStage, rowsCleared];
