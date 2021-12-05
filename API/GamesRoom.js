@@ -30,6 +30,19 @@ class GamesRoom {
         });
     }
     /*
+    ** Creates a new room
+    */
+    createRoom = (io, socket, room, players) => {
+        return new Promise((resolve, reject) => {
+            const player = players.filter(plyr => plyr.socketId === socket.id)
+            player[0].admin = true;
+            socket.join(room);
+            console.log("players in room", players);
+            io.to(room).emit('chat', { message: `${player[0]?.name} joined ${room}`, type: 'joined' })
+            this.getClient(io, room, players);
+        });
+    }
+    /*
     ** Join Room already created
     */
     joinRoom = (io, socket, room, players) => {
@@ -42,13 +55,24 @@ class GamesRoom {
         });
     }
     /*
-    ** Leave Room
+    **  Tells the room that a player has left
     */
-    leaveRoom = (socket, room) => {
+
+    leaveRoom = (io, socket, room, players) => {
         return new Promise((resolve, reject) => {
+            const player = players.filter(plyr => plyr.socketId === socket.id)
+            console.log("player left ", player);
             socket.leave(room, () => {
                 resolve(true);
             });
+        });
+    }
+    /*
+    ** Starts the game
+    */
+    startGame = (io, room, Tetrimios) => {
+        return new Promise((resolve, reject) => {
+            io.to(room).emit('startGame', Tetrimios);
         });
     }
     /*
@@ -60,6 +84,7 @@ class GamesRoom {
             resolve(true);
         });
     }
+
 }
 
 module.exports = GamesRoom;

@@ -15,6 +15,7 @@ function Home(props) {
     Api()
       .get("/rooms")
       .then((res) => {
+        console.log(res.data);
         setrooms(res?.data);
       })
       .catch((err) => {
@@ -49,7 +50,7 @@ function Home(props) {
   });
 
   const joinRoom = (room) => {
-    if (props.data.mode === "solo") {
+    if (props.data.mode === "solpa") {
       console.log("here")
       
       toast("This is a solo room", {

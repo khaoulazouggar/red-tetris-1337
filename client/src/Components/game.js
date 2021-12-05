@@ -10,6 +10,7 @@ import { useInterval } from "../hooks/useInterval";
 import { useGameStatus } from "../hooks/useGameStatus";
 import NextPiece from "./NextPiece";
 import PlayersStage from "./PlayersStage";
+import { socket } from "../socket/socket";
 
 function Game(props) {
   const [username, setusername] = useState(props.data.username);
@@ -48,6 +49,7 @@ function Game(props) {
 
   function startgame(e) {
     if (e.key === "Enter" && submited) {
+      socket.emit("startgame", { room: props.data.roomName});
       if (gameOver) {
         setStage(createStage());
         setNextStage(createStage(4, 4));
@@ -107,7 +109,7 @@ function Game(props) {
         break;
       }
     }
-    
+
     for (let i = tmp; i > 0; i--) {
       if (!checkCollision(player, stage, { x: 0, y: i })) {
         updatePlayerPos({ x: 0, y: i, collided: false });
@@ -153,27 +155,27 @@ function Game(props) {
           </div>
         </div>
         <div className="chat left-chat">
-          <div style={{position: "relative"}}>
+          <div style={{ position: "relative" }}>
             <span>khaoula</span>
             <PlayersStage stage={stage} />
             <div className="players-overlay"></div>
           </div>
-          <div style={{position: "relative"}}>
+          <div style={{ position: "relative" }}>
             <span>yassir</span>
             <PlayersStage stage={stage} />
             <div className="players-overlay"></div>
           </div>
-          <div style={{position: "relative"}}>
+          <div style={{ position: "relative" }}>
             <span>yassir</span>
             <PlayersStage stage={stage} />
             <div className="players-overlay"></div>
           </div>
-          <div style={{position: "relative"}}>
+          <div style={{ position: "relative" }}>
             <span>khaoula</span>
             <PlayersStage stage={stage} />
             <div className="players-overlay"></div>
           </div>
-         
+
         </div>
       </div>
       <div

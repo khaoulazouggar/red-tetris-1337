@@ -18,16 +18,16 @@ function Chat(props) {
       console.log("------>", data);
       setChat((chat) => [...chat, data]);
     });
+    socket.on("playersJoined", (data) => {
+      console.log("playersJoined", data);
+      setPlayersJoined([...playersJoined, data]);
+    });
+    socket.on("roomPlayers", (data) => {
+      setRoomPlayer(data);
+    });
   }, []);
   /* Listen for players List */
-  socket.on("roomPlayers", (data) => {
-    setRoomPlayer(data);
-  });
   /* Listener tell us when a player join the room */
-  socket.on("playersJoined", (data) => {
-    console.log("playersJoined", data);
-    setPlayersJoined([...playersJoined, data]);
-  });
   /* End Socket Area */
   const handleChange = (e) => {
     setmessage(e.target.value)
