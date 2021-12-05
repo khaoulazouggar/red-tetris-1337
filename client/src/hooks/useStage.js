@@ -37,17 +37,19 @@ export const useStage = (player, nextPiece,resetPlayer, gameOver) => {
       );
 
       // Then draw the shadow of tetromino
-      player.tetromino.forEach((row, y) => {
-        row.forEach((value, x) => {
-          if (value !== 0) {
-            newStage[y + shadow + player.pos.y - 1][x + player.pos.x] = [
-              value+"S",
-              `${player.collided ? "merged" : "clear"}`,
-              true,
-            ];
-          }
+      if(shadow){
+        player.tetromino.forEach((row, y) => {
+          row.forEach((value, x) => {
+            if (value !== 0) {
+              newStage[y + shadow + player.pos.y - 1][x + player.pos.x] = [
+                value+"S",
+                `${player.collided ? "merged" : "clear"}`,
+                true,
+              ];
+            }
+          });
         });
-      });
+      }
 
       // Then draw the tetromino
       player.tetromino.forEach((row, y) => {
