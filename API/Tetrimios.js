@@ -26,7 +26,7 @@ class Tetrimios {
     */
     getTetriminos() {
         let tetriminos = [];
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 20; i++) {
             tetriminos.push(this.generateRandomTetrimino());
         }
         return tetriminos;

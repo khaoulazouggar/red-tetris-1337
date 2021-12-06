@@ -130,6 +130,7 @@
   margin: 5px;
   background-color: #bccdd6b3;
   border-radius: 2px;
+  min-height: 66vh;
 }
 
 .game {
@@ -153,6 +154,7 @@
   display: flex;
   flex-direction: column;
   border-radius: 2px 2px 2px 2px;
+  max-height: 18vh;
 }
 
 .score-level {
@@ -199,7 +201,7 @@
 }
 
 .board {
-  // position: relative;
+  position: relative;
   align-self: center;
   // background-color: rgba(0, 0, 0, 0.3);
   // display: flex;
@@ -348,14 +350,15 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border: 3px solid white;
-  border-radius: 5px;
+  // border: 3px solid white;
+  // border-radius: 5px;
   background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
-  top: 43px;
+  top: 4px;
   // left: -3px;
   height: 86vh;
   width: 43vh;
+  left: 4px;
 }
 
 .overlay-content {
@@ -429,4 +432,40 @@
   height: 30vh;
   width: 15vh;
   left: 3px;
+}
+
+.Toastify__toast{
+  font-family: "ArcadeClassic" !important;
+}
+
+.players-field{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  max-width: 600px;
+  max-height: 800px;
+  overflow: scroll;
+}
+.players-field::-webkit-scrollbar {
+  display: none;
+}
+
+
+
+// :root{
+//   --toastify-font-family: ArcadeClassic;
+// }
+
+@media only screen and (max-width: 1000px) {
+.room-field{
+  flex-direction: column;
+  overflow: scroll;
+}
+
+.room-field::-webkit-scrollbar {
+  display: none;
+}
+
+
 }
