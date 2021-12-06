@@ -54,6 +54,7 @@ class GamesRoom {
         return new Promise((resolve, reject) => {
             const player = players.filter(plyr => plyr.socketId === socket.id)
             player[0].admin = true;
+            player[0].room = room;
             socket.join(room);
             console.log("players in room", players);
             io.to(room).emit('chat', { message: `${player[0]?.name} joined ${room}`, type: 'joined' })
@@ -66,7 +67,8 @@ class GamesRoom {
     joinRoom = (io, socket, room, players) => {
         return new Promise((resolve, reject) => {
             const player = players.filter(plyr => plyr.socketId === socket.id)
-            console.log(players.some(plyr => plyr.socketId === socket.id));
+            player[0].room = room;
+            console.log("players in room", players);
             socket.join(room);
             this.getClient(io, room, players);
             io.to(room).emit('chat', { message: `${player[0]?.name} joined ${room}`, type: 'joined' })
@@ -76,13 +78,11 @@ class GamesRoom {
     **  Tells the room that a player has left
     */
 
-    leaveRoom = (io, socket, room, players) => {
+    leaveRoom = (io, socket, rooms, players) => {
         return new Promise((resolve, reject) => {
             const player = players.filter(plyr => plyr.socketId === socket.id)
             console.log("player left ", player);
-            socket.leave(room, () => {
-                resolve(true);
-            });
+            socket.leave(room)
         });
     }
     /*

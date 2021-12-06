@@ -55,7 +55,9 @@ io.on("connection", async (socket) => {
         console.log("-----Players-----", players)
     })
     socket.on("disconnect", () => {
-        player.deletePlayer(socket.id, players)
+
+        // Games.deletePlayer(socket.id, players)
+        Games.leaveRoom(io, socket, rooms, players)
         console.log("Client Disconnected");
         // console.log("Rooma", io.sockets.adapter);
     })
@@ -70,25 +72,24 @@ io.on("connection", async (socket) => {
         Games.createRoom(io, socket, data, players)
         io.emit("room_created", data)
     })
-    socket.on("join_room", async (data) => {
-        console.log("Room Joined", data);
+    socket.on("join_room", (data) => {
         Games.joinRoom(io, socket, data, players)
         io.emit("room_joined", data);
     })
     socket.on("startgame", async (data) => {
-        console.log("Game Started", data);
-        console.log(tetrimios.getTetriminos());
-        const tetriminos = await tetrimios.getTetriminos();
         Games.getUser(io, socket.id, data.room, players)
-            .then(user => {
+            .then(async user => {
                 if (user.admin) {
-                    console.log("User", user, "Admin");
+                    const tetriminos = await tetrimios.getTetriminos();
                     Games.startGame(io, data.room, tetriminos)
                 }
+                else {
+                    io.to(socket.id).emit("wait_admin");
+                }
             })
-        io.emit("game_started", data);
+        io.emit("game_started");
     })
-});
+})
 
 
 server.listen(PORT, () => {
