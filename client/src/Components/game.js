@@ -23,14 +23,16 @@ function Game(props) {
   const gameRef = useRef(null);
   const [tetriminos, setTetriminos] = useState([]);
   const [firstDrop, setfirstDrop] = useState(1);
-  const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
   const [gameStart, setGameStart] = useState(false);
   const [getTetrimino, setgetTetrimino] = useState(false);
-
+  
   //CUSTOM HOOKS
   const [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate, concatTetriminos, setConcatTetriminos] =
-    usePlayer(setGameOver, setstart, setDropTime, tetriminos, setTetriminos);
+  usePlayer(setGameOver, setstart, setDropTime, tetriminos, setTetriminos);
   const [stage, nextStage, setStage, setNextStage, rowsCleared] = useStage(player, nextPiece, resetPlayer, gameOver);
+  
+  // state for score and level
+  const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
 
   //START GAME EFFECT
   useEffect(() => {
