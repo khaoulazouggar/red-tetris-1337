@@ -20,6 +20,24 @@ class GamesRoom {
 
     }
     /*
+    ** Get user from room
+    */
+    getUser = (io, socketId, room, players) => {
+        return new Promise((resolve, reject) => {
+            const player = []
+            let Admin
+            const clientsList = io.sockets.adapter.rooms.get(room)
+            for (const clientId of clientsList) {
+                player.push(clientId)
+            }
+            for (let i = 0; i < player.length; i++) {
+                if (player[i] === socketId)
+                 Admin = players.find(player => player.socketId === socketId);
+            }
+            resolve(Admin);
+        })
+    }
+    /*
     **  Tells the room that a player has joined
     */
     joinedRoomMessage = (io, room, name, message) => {

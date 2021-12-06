@@ -79,7 +79,13 @@ io.on("connection", async (socket) => {
         console.log("Game Started", data);
         console.log(tetrimios.getTetriminos());
         const tetriminos = await tetrimios.getTetriminos();
-        Games.startGame(io, data.room, tetriminos)
+        Games.getUser(io, socket.id, data.room, players)
+            .then(user => {
+                if (user.admin) {
+                    console.log("User", user, "Admin");
+                    Games.startGame(io, data.room, tetriminos)
+                }
+            })
         io.emit("game_started", data);
     })
 });
