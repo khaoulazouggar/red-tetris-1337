@@ -4,7 +4,7 @@ import { TETROMINOS, randomTetromino } from "../Components/tetriminos";
 import { STAGE_WIDTH, checkCollision } from "../Components/gameHelpers";
 import { socket } from "../socket/socket";
 
-export const usePlayer = (setGameOver, setstart, setDropTime,tetriminos,setTetriminos) => {
+export const usePlayer = (setGameOver, setstart, setDropTime,tetriminos,setTetriminos,setgetTetrimino) => {
   const [player, setPlayer] = useState({
     pos: { x: 0, y: 0 },
     tetromino: TETROMINOS[0].shape,
@@ -73,6 +73,7 @@ export const usePlayer = (setGameOver, setstart, setDropTime,tetriminos,setTetri
           setGameOver(true);
           setstart(true);
           setDropTime(null);
+          setgetTetrimino(false);
         }
       } else {
         setPlayer({
@@ -94,7 +95,7 @@ export const usePlayer = (setGameOver, setstart, setDropTime,tetriminos,setTetri
       }
     
     
-  }, [setGameOver, setstart, setDropTime, tetriminos, setTetriminos]);
+  }, [setGameOver, setstart, setDropTime, tetriminos, setTetriminos, setgetTetrimino]);
 
   return [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate,concatTetriminos,setConcatTetriminos];
 };

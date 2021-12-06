@@ -15,6 +15,7 @@ import { socket } from "../socket/socket";
 function Game(props) {
   const [username, setusername] = useState(props.data.username);
   const [roomName, setroomName] = useState(props.data.roomName);
+  // const [start, setstart] = useState(true);
   const start = props.data.start;
   const setstart = props.data.setstart;
   const [gameOver, setGameOver] = useState(false);
@@ -22,19 +23,15 @@ function Game(props) {
   const [submited, setsubmited] = useState(true);
   const gameRef = useRef(null);
   const [tetriminos, setTetriminos] = useState([]);
-  const [firstDrop, setfirstDrop] = useState(1);
-  const [gameStart, setGameStart] = useState(false);
   const [getTetrimino, setgetTetrimino] = useState(false);
+  const [gameStart, setGameStart] = useState(false);
+  const [firstDrop, setfirstDrop] = useState(1);
   
-  //CUSTOM HOOKS
   const [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate, concatTetriminos, setConcatTetriminos] =
-  usePlayer(setGameOver, setstart, setDropTime, tetriminos, setTetriminos);
+    usePlayer(setGameOver, setstart, setDropTime, tetriminos, setTetriminos, setgetTetrimino);
   const [stage, nextStage, setStage, setNextStage, rowsCleared] = useStage(player, nextPiece, resetPlayer, gameOver);
-  
-  // state for score and level
   const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
 
-  //START GAME EFFECT
   useEffect(() => {
     console.log("gameOver", gameOver);
     console.log("gameStart", gameStart);
@@ -60,8 +57,6 @@ function Game(props) {
     }
   }, [gameStart]);
 
-
-  //Get Tetriminos Effect
   useEffect(() => {
     socket.on("startGame", (tetris) => {
       console.log("startGame", tetris);
@@ -70,12 +65,11 @@ function Game(props) {
         setGameStart(true);
         setgetTetrimino(true);
       }
+      // tetris[0] && setGameStart(true) && setgetTetrimino(true);
       console.log("tetris", tetriminos);
     });
   }, []);
 
-
-  //Get Tetriminos for scend time
   useEffect(() => {
     if (concatTetriminos) {
       socket.emit("startgame", { room: props.data.roomName });
@@ -84,12 +78,16 @@ function Game(props) {
     console.log("tetriminos", tetriminos);
   }, [concatTetriminos]);
 
-  //Set focus on game 
   useEffect(() => {
     gameRef.current.focus();
     props.data.clicked === 1 ? props.data.setclicked(2) : props.data.setclicked(5);
     // eslint-disable-next-line
   }, []);
+
+  function handleChange(event) {
+    console.log(event.target.value);
+    props.data.setmode(event.target.value);
+  }
 
   function startgame(e) {
     if (e.key === "Enter" && submited) {
@@ -97,11 +95,6 @@ function Game(props) {
         socket.emit("startgame", { room: props.data.roomName });
       }
     }
-  }
-
-  function handleChange(event) {
-    console.log(event.target.value);
-    props.data.setmode(event.target.value);
   }
 
   // This one starts the game
