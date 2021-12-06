@@ -4,7 +4,7 @@ import { TETROMINOS, randomTetromino } from "../Components/tetriminos";
 import { STAGE_WIDTH, checkCollision } from "../Components/gameHelpers";
 import { socket } from "../socket/socket";
 
-export const usePlayer = (setGameOver, setstart, setDropTime) => {
+export const usePlayer = (setGameOver, setstart, setDropTime,tetriminos,setTetriminos) => {
   const [player, setPlayer] = useState({
     pos: { x: 0, y: 0 },
     tetromino: TETROMINOS[0].shape,
@@ -15,6 +15,8 @@ export const usePlayer = (setGameOver, setstart, setDropTime) => {
     tetromino: TETROMINOS[0].shape,
     collided: false,
   });
+
+  const [concatTetriminos, setConcatTetriminos] = useState(false);
 
   function rotate(matrix, dir) {
     // Make the rows to become cols (transpose)
@@ -56,7 +58,7 @@ export const usePlayer = (setGameOver, setstart, setDropTime) => {
 
       let tetris = {
         pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
-        tetromino: randomTetromino().shape,
+        tetromino: TETROMINOS[tetriminos[0]].shape,
         collided: false,
       };
       if (stage) {
@@ -82,11 +84,17 @@ export const usePlayer = (setGameOver, setstart, setDropTime) => {
 
       setNextPiece({
         pos: { x: 0, y: 0 },
-        tetromino: randomTetromino().shape,
+        tetromino: TETROMINOS[tetriminos[1]].shape,
         collided: false,
       });
+      tetriminos.shift();
+      console.log(tetriminos.length);
+      if(tetriminos.length === 15){
+        setConcatTetriminos(true);
+      }
     
-  }, [setGameOver, setstart, setDropTime]);
+    
+  }, [setGameOver, setstart, setDropTime, tetriminos, setTetriminos]);
 
-  return [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate];
+  return [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate,concatTetriminos,setConcatTetriminos];
 };

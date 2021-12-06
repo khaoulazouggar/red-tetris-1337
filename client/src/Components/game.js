@@ -15,49 +15,28 @@ import { socket } from "../socket/socket";
 function Game(props) {
   const [username, setusername] = useState(props.data.username);
   const [roomName, setroomName] = useState(props.data.roomName);
-  // const [start, setstart] = useState(true);
-  const start = props.data.start
-  const setstart = props.data.setstart
+  const start = props.data.start;
+  const setstart = props.data.setstart;
   const [gameOver, setGameOver] = useState(false);
   const [dropTime, setDropTime] = useState(null);
   const [submited, setsubmited] = useState(true);
   const gameRef = useRef(null);
   const [tetriminos, setTetriminos] = useState([]);
-  const [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate] =
-    usePlayer(setGameOver, setstart, setDropTime, tetriminos);
-  const [stage, nextStage, setStage, setNextStage, rowsCleared] = useStage(
-    player,
-    nextPiece,
-    resetPlayer,
-    gameOver
-  );
   const [firstDrop, setfirstDrop] = useState(1);
-  const [score, setScore, rows, setRows, level, setLevel] =
-    useGameStatus(rowsCleared);
+  const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
+  const [gameStart, setGameStart] = useState(false);
+  const [getTetrimino, setgetTetrimino] = useState(false);
+
+  //CUSTOM HOOKS
+  const [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate, concatTetriminos, setConcatTetriminos] =
+    usePlayer(setGameOver, setstart, setDropTime, tetriminos, setTetriminos);
+  const [stage, nextStage, setStage, setNextStage, rowsCleared] = useStage(player, nextPiece, resetPlayer, gameOver);
+
+  //START GAME EFFECT
   useEffect(() => {
-    socket.on("startGame", (tetriminos) => {
-      console.log("startGame", tetriminos);
-      setTetriminos(tetriminos);
-    });
-  }, []);
-
-  useEffect(() => {
-    gameRef.current.focus();
-    props.data.clicked === 1
-      ? props.data.setclicked(2)
-      : props.data.setclicked(5);
-    // eslint-disable-next-line
-  }, []);
-
-  function handleChange(event) {
-    console.log(event.target.value);
-    props.data.setmode(event.target.value)
-  }
-
-
-  function startgame(e) {
-    if (e.key === "Enter" && submited) {
-      socket.emit("startgame", { room: props.data.roomName });
+    console.log("gameOver", gameOver);
+    console.log("gameStart", gameStart);
+    if (gameStart) {
       if (gameOver) {
         console.log("bdina");
         setStage(createStage());
@@ -71,15 +50,61 @@ function Game(props) {
       }
       setstart(false);
       setGameOver(false);
+      setGameStart(false);
       setDropTime(1000);
       setScore(0);
       setLevel(0);
       setRows(0);
     }
+  }, [gameStart]);
+
+
+  //Get Tetriminos Effect
+  useEffect(() => {
+    socket.on("startGame", (tetris) => {
+      console.log("startGame", tetris);
+      tetriminos.length > 0 ? setTetriminos([...tetriminos, tetris]) : setTetriminos(tetris);
+      if (tetris.length > 0) {
+        setGameStart(true);
+        setgetTetrimino(true);
+      }
+      console.log("tetris", tetriminos);
+    });
+  }, []);
+
+
+  //Get Tetriminos for scend time
+  useEffect(() => {
+    if (concatTetriminos) {
+      socket.emit("startgame", { room: props.data.roomName });
+      setConcatTetriminos(false);
+    }
+    console.log("tetriminos", tetriminos);
+  }, [concatTetriminos]);
+
+  //Set focus on game 
+  useEffect(() => {
+    gameRef.current.focus();
+    props.data.clicked === 1 ? props.data.setclicked(2) : props.data.setclicked(5);
+    // eslint-disable-next-line
+  }, []);
+
+  function startgame(e) {
+    if (e.key === "Enter" && submited) {
+      if (!getTetrimino) {
+        socket.emit("startgame", { room: props.data.roomName });
+      }
+    }
+  }
+
+  function handleChange(event) {
+    console.log(event.target.value);
+    props.data.setmode(event.target.value);
   }
 
   // This one starts the game
   useInterval(() => {
+    // console.log(tetriminos);
     drop();
   }, dropTime);
 
@@ -113,9 +138,8 @@ function Game(props) {
 
   const hardDrop = () => {
     let tmp = 0;
-    while (!checkCollision(player, stage, { x: 0, y: tmp }))
-      tmp += 1
-    console.log(tmp)
+    while (!checkCollision(player, stage, { x: 0, y: tmp })) tmp += 1;
+    // console.log(tmp);
     updatePlayerPos({ x: 0, y: tmp - 1, collided: false });
 
     // for (let i = 0; i < STAGE_HEIGHT; i++) {
@@ -155,19 +179,11 @@ function Game(props) {
   };
 
   return (
-    <div
-      className="room-field"
-      onKeyPress={startgame}
-      tabIndex="0"
-      ref={gameRef}
-      onKeyDown={(e) => move(e)}
-    >
+    <div className="room-field" onKeyPress={startgame} tabIndex="0" ref={gameRef} onKeyDown={(e) => move(e)}>
       <div className="right-field" data-aos="fade-up" data-aos-duration="2000">
         <div className="score next-field">
           <p className="next-p">Next</p>
-          <div className="next">
-            {!start ? <NextPiece stage={nextStage} /> : ""}
-          </div>
+          <div className="next">{!start ? <NextPiece stage={nextStage} /> : ""}</div>
         </div>
         <div className="chat left-chat">
           <div className="players-field">
@@ -192,14 +208,9 @@ function Game(props) {
               <div className="players-overlay"></div>
             </div>
           </div>
-
         </div>
       </div>
-      <div
-        className="left-field game"
-        data-aos="fade-down"
-        data-aos-duration="2000"
-      >
+      <div className="left-field game" data-aos="fade-down" data-aos-duration="2000">
         <Board data={{ start, setstart, stage, gameOver }} />
       </div>
 
