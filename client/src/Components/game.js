@@ -23,9 +23,8 @@ function Game(props) {
   const [submited, setsubmited] = useState(true);
   const gameRef = useRef(null);
   const [tetriminos, setTetriminos] = useState([]);
-  const [gameStarted, setGameStarted] = useState(false);
   const [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate] =
-    usePlayer(setGameOver, setstart, setDropTime, tetriminos, setTetriminos, setGameStarted);
+    usePlayer(setGameOver, setstart, setDropTime, tetriminos);
   const [stage, nextStage, setStage, setNextStage, rowsCleared] = useStage(
     player,
     nextPiece,
@@ -36,36 +35,12 @@ function Game(props) {
   const [score, setScore, rows, setRows, level, setLevel] =
     useGameStatus(rowsCleared);
   useEffect(() => {
-    socket.on("startGame", (tetris) => {
-      console.log("startGame", tetris);
-      setTetriminos(tetris);
-      tetris[0] && setGameStarted(true);
+    socket.on("startGame", (tetriminos) => {
+      console.log("startGame", tetriminos);
+      setTetriminos(tetriminos);
     });
   }, []);
 
-  useEffect(() => {
-    if (gameStarted) {
-      console.log(gameOver)
-      if (gameOver) {
-        console.log("bdina");
-        if(startgame())
-        setStage(createStage());
-        setNextStage(createStage(4, 4));
-        resetPlayer();
-        setGameOver(false);
-      }
-      if (firstDrop === 1) {
-        resetPlayer();
-        setfirstDrop(2);
-      }
-      setstart(false);
-      setGameOver(false);
-      setDropTime(1000);
-      setScore(0);
-      setLevel(0);
-      setRows(0);
-    }
-  }, [gameStarted, gameOver]);
   useEffect(() => {
     gameRef.current.focus();
     props.data.clicked === 1
@@ -83,6 +58,23 @@ function Game(props) {
   function startgame(e) {
     if (e.key === "Enter" && submited) {
       socket.emit("startgame", { room: props.data.roomName });
+      if (gameOver) {
+        console.log("bdina");
+        setStage(createStage());
+        setNextStage(createStage(4, 4));
+        resetPlayer();
+        setGameOver(false);
+      }
+      if (firstDrop === 1) {
+        resetPlayer();
+        setfirstDrop(2);
+      }
+      setstart(false);
+      setGameOver(false);
+      setDropTime(1000);
+      setScore(0);
+      setLevel(0);
+      setRows(0);
     }
   }
 
