@@ -32,7 +32,7 @@ class GamesRoom {
             }
             for (let i = 0; i < player.length; i++) {
                 if (player[i] === socketId)
-                 Admin = players.find(player => player.socketId === socketId);
+                    Admin = players.find(player => player.socketId === socketId);
             }
             resolve(Admin);
         })
@@ -80,9 +80,21 @@ class GamesRoom {
 
     leaveRoom = (io, socket, rooms, players) => {
         return new Promise((resolve, reject) => {
+            const playerremoved = players.find(player => player.socketId === socket.id)
+            console.clear();
+            console.log("------------------------------------------------------");
+            console.log("playerremoved", playerremoved);
+            console.log("------------------------------------------------------");
+            socket.leave(playerremoved.room);
+            const playersinRoom = players.filter(plyr => plyr.room === playerremoved.room)
             const player = players.filter(plyr => plyr.socketId === socket.id)
-            console.log("player left ", player);
-            socket.leave(room)
+            player[0].room = '';
+            // players = player;
+            console.clear();
+            console.log("------------------------------------------------------");
+            console.log("players in room", playersinRoom);
+            console.log("------------------------------------------------------");
+            console.log("players", players);
         });
     }
     /*
