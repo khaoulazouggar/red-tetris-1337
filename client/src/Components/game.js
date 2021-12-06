@@ -15,7 +15,6 @@ import { socket } from "../socket/socket";
 function Game(props) {
   const [username, setusername] = useState(props.data.username);
   const [roomName, setroomName] = useState(props.data.roomName);
-  // const [start, setstart] = useState(true);
   const start = props.data.start;
   const setstart = props.data.setstart;
   const [gameOver, setGameOver] = useState(false);
@@ -26,12 +25,15 @@ function Game(props) {
   const [getTetrimino, setgetTetrimino] = useState(false);
   const [gameStart, setGameStart] = useState(false);
   const [firstDrop, setfirstDrop] = useState(1);
-  
+
+  // Custom Hooks
   const [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate, concatTetriminos, setConcatTetriminos] =
     usePlayer(setGameOver, setstart, setDropTime, tetriminos, setTetriminos, setgetTetrimino);
   const [stage, nextStage, setStage, setNextStage, rowsCleared] = useStage(player, nextPiece, resetPlayer, gameOver);
+
   const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
 
+  // Start Game effect
   useEffect(() => {
     console.log("gameOver", gameOver);
     console.log("gameStart", gameStart);
@@ -42,21 +44,25 @@ function Game(props) {
         setNextStage(createStage(4, 4));
         resetPlayer();
         setGameOver(false);
+        setScore(0);
+        setLevel(0);
+        setRows(0);
       }
       if (firstDrop === 1) {
         resetPlayer();
         setfirstDrop(2);
+        setScore(0);
+        setLevel(0);
+        setRows(0);
       }
       setstart(false);
       setGameOver(false);
       setGameStart(false);
       setDropTime(1000);
-      setScore(0);
-      setLevel(0);
-      setRows(0);
     }
   }, [gameStart]);
 
+  //Get Tetriminos effect
   useEffect(() => {
     socket.on("startGame", (tetris) => {
       console.log("startGame", tetris);
@@ -65,11 +71,11 @@ function Game(props) {
         setGameStart(true);
         setgetTetrimino(true);
       }
-      // tetris[0] && setGameStart(true) && setgetTetrimino(true);
       console.log("tetris", tetriminos);
     });
   }, []);
 
+  // Get Tetriminos for the second time
   useEffect(() => {
     if (concatTetriminos) {
       socket.emit("startgame", { room: props.data.roomName });
@@ -78,18 +84,22 @@ function Game(props) {
     console.log("tetriminos", tetriminos);
   }, [concatTetriminos]);
 
+  // Set focus on the game
   useEffect(() => {
     gameRef.current.focus();
     props.data.clicked === 1 ? props.data.setclicked(2) : props.data.setclicked(5);
     // eslint-disable-next-line
   }, []);
 
+  // Solo Or Multiplayer
   function handleChange(event) {
     console.log(event.target.value);
     props.data.setmode(event.target.value);
   }
 
+  //Get Tetriminos for the first time
   function startgame(e) {
+    console.log("startgame", getTetrimino);
     if (e.key === "Enter" && submited) {
       if (!getTetrimino) {
         socket.emit("startgame", { room: props.data.roomName });
@@ -97,18 +107,19 @@ function Game(props) {
     }
   }
 
-  // This one starts the game
+  // Start Game (Drop the tetrimino down)
   useInterval(() => {
-    // console.log(tetriminos);
     drop();
   }, dropTime);
 
+  // Move the tetrimino on (x) axis
   const movePlayer = (dir) => {
     if (!checkCollision(player, stage, { x: dir, y: 0 })) {
       updatePlayerPos({ x: dir, y: 0 });
     }
   };
 
+  // Move the tetrimino down
   const drop = () => {
     // Increase level when player has cleared 10 rows
     if (rows > (level + 1) * 3) {
@@ -126,37 +137,22 @@ function Game(props) {
         setGameOver(true);
         setstart(true);
         setDropTime(null);
+        setgetTetrimino(false);
       }
+      // Drop the next tetrimino
       updatePlayerPos({ x: 0, y: 0, collided: true });
     }
   };
 
+  // Hard Drop the tetrimino
   const hardDrop = () => {
     let tmp = 0;
     while (!checkCollision(player, stage, { x: 0, y: tmp })) tmp += 1;
     // console.log(tmp);
     updatePlayerPos({ x: 0, y: tmp - 1, collided: false });
-
-    // for (let i = 0; i < STAGE_HEIGHT; i++) {
-    //   if (checkCollision(player, stage, { x: 0, y: i })) {
-    //     tmp = i;
-    //     break;
-    //   }
-    // }
-
-    // for (let i = tmp; i > 0; i--) {
-    //   if (!checkCollision(player, stage, { x: 0, y: i })) {
-    //     updatePlayerPos({ x: 0, y: i, collided: false });
-    //     break;
-    //   }
-    // }
   };
 
-  const dropPlayer = () => {
-    // setDropTime(null);
-    drop();
-  };
-
+  // Move the tetrimino
   const move = ({ keyCode }) => {
     if (!gameOver) {
       if (keyCode === 37) {
@@ -164,7 +160,7 @@ function Game(props) {
       } else if (keyCode === 39) {
         movePlayer(1);
       } else if (keyCode === 40) {
-        dropPlayer();
+        drop();
       } else if (keyCode === 38) {
         playerRotate(stage, 1);
       } else if (keyCode === 32) {

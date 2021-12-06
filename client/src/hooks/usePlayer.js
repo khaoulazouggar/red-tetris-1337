@@ -1,10 +1,10 @@
-import { useState, useCallback, useEffect } from "react";
-
-import { TETROMINOS, randomTetromino } from "../Components/tetriminos";
+import { useState, useCallback} from "react";
+import { TETROMINOS} from "../Components/tetriminos";
 import { STAGE_WIDTH, checkCollision } from "../Components/gameHelpers";
-import { socket } from "../socket/socket";
 
 export const usePlayer = (setGameOver, setstart, setDropTime,tetriminos,setTetriminos,setgetTetrimino) => {
+  
+  const [concatTetriminos, setConcatTetriminos] = useState(false);
   const [player, setPlayer] = useState({
     pos: { x: 0, y: 0 },
     tetromino: TETROMINOS[0].shape,
@@ -16,7 +16,6 @@ export const usePlayer = (setGameOver, setstart, setDropTime,tetriminos,setTetri
     collided: false,
   });
 
-  const [concatTetriminos, setConcatTetriminos] = useState(false);
 
   function rotate(matrix, dir) {
     // Make the rows to become cols (transpose)
@@ -46,6 +45,7 @@ export const usePlayer = (setGameOver, setstart, setDropTime,tetriminos,setTetri
     setPlayer(clonedPlayer);
   }
 
+  
   const updatePlayerPos = ({ x, y, collided }) => {
     setPlayer((prev) => ({
       ...prev,
@@ -54,6 +54,8 @@ export const usePlayer = (setGameOver, setstart, setDropTime,tetriminos,setTetri
     }));
   };
 
+// useCallback is used to avoid infinite loop
+// Resets the player position
   const resetPlayer = useCallback((stage) => {
 
       let tetris = {
@@ -69,7 +71,7 @@ export const usePlayer = (setGameOver, setstart, setDropTime,tetriminos,setTetri
             collided: false,
           });
         } else {
-          console.log("GAME OVER!!!");
+          console.log("GAME OVER!!! form resetPlayer");
           setGameOver(true);
           setstart(true);
           setDropTime(null);
