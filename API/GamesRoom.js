@@ -14,8 +14,10 @@ class GamesRoom {
 				if (player[i] === players[i].socketId)
 					roomList.push(players[i].name);
 			}
-			console.log(roomList, "roomList");
-			io.to(room).emit('roomPlayers', roomList);
+			io.to(room).emit('roomPlayers', roomList, (err, data) => {
+				if (err) reject(err)
+				resolve(true)
+			});
 		});
 
 	}
