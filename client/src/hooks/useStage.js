@@ -33,7 +33,7 @@ export const useStage = (player, nextPiece, resetPlayer, gameOver) => {
 		const updateStage = (prevStage) => {
 			// First flush the stage
 			const newStage = prevStage.map((row) =>
-				row.map((cell) => (cell[1] === "merged" && !cell[3] ? cell : [0, "clear"]))
+				row.map((cell) => (cell[1] === "merged" ? cell : [0, "clear"]))
 			);
 
 			// Then draw the shadow of tetromino
@@ -44,7 +44,6 @@ export const useStage = (player, nextPiece, resetPlayer, gameOver) => {
 							newStage[y + shadow + player.pos.y - 1][x + player.pos.x] = [
 								value + "S",
 								`${player.collided ? "merged" : "clear"}`,
-								true,
 							];
 						}
 					});

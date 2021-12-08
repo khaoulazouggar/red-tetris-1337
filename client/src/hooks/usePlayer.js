@@ -97,7 +97,7 @@ export const usePlayer = (setGameOver, setstart, setDropTime,tetriminos,setTetri
       }
     
     
-  }, [setGameOver, setstart, setDropTime, tetriminos, setTetriminos, setgetTetrimino]);
+  }, [setGameOver, setstart, setDropTime, tetriminos, setgetTetrimino]);
 
   return [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate,concatTetriminos,setConcatTetriminos];
 };

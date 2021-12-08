@@ -344,6 +344,14 @@
   color: #109910;
   font-size: large;
 }
+.player-left {
+  color: #cb3535;
+  font-size: large;
+}
+.player-admin {
+  color: #dfda0c;
+  font-size: large;
+}
 
 .overlay {
   align-items: center;
@@ -451,7 +459,24 @@
   display: none;
 }
 
+.home-button{
+  color: white;
+  border: 0px;
+  outline: none;
+  opacity: 0.5;
+  transition: opacity 0.2s ease 0s;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  font-size: 3vh;
+  margin-left: 20px;
+  font-family: "ArcadeClassic";
+  cursor: pointer;
+}
 
+.home-button:hover{
+  opacity: 1;
+  transition: opacity 0.2s ease 0s;
+}
 
 // :root{
 //   --toastify-font-family: ArcadeClassic;

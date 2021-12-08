@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
-import { socket } from "../socket/socket"
+import { socket } from "../socket/socket";
 // import { ClickOutHandler } from "react-onclickout";
 const ClickOutHandler = require("react-onclickout");
 
@@ -30,7 +30,7 @@ function Chat(props) {
   /* Listener tell us when a player join the room */
   /* End Socket Area */
   const handleChange = (e) => {
-    setmessage(e.target.value)
+    setmessage(e.target.value);
   };
 
   const insetMsg = (e) => {
@@ -39,11 +39,16 @@ function Chat(props) {
     document.getElementById("msg").value = "";
     if (message) {
       if (message?.trim() !== "") {
-        socket.emit("send_message", { name: props?.data?.username, message: message, room: props.data.roomName, type: "chat" });
+        socket.emit("send_message", {
+          name: props?.data?.username,
+          message: message,
+          room: props.data.roomName,
+          type: "chat",
+        });
         setmessage("");
       }
     }
-  }
+  };
   return (
     <div className="chat-field">
       <div className="players">
@@ -51,13 +56,10 @@ function Chat(props) {
           <p>Players</p>
         </div>
         <div className="name-players">
-          {roomPlayer.length > 0 && roomPlayer?.map((player, i) => {
-            return (
-              <div key={i}>
-                {player}
-              </div>
-            );
-          })}
+          {roomPlayer.length > 0 &&
+            roomPlayer?.map((player, i) => {
+              return <div key={i}>{player}</div>;
+            })}
         </div>
       </div>
       <div className="messages">
@@ -67,24 +69,29 @@ function Chat(props) {
         <div className="messages-field">
           <div>
             {chat?.map((chatmsg, index) => {
-              return (
-                chatmsg.type === "joined" ? <div className="player-room" key={index}>
+              return chatmsg.type === "joined" ? (
+                <div className="player-room" key={index}>
                   {chatmsg.message}
-
-                </div> : <div key={index}>
+                </div>
+              ) : chatmsg.type === "left" ? (
+                <div className="player-left" key={index}>
+                  {chatmsg.message}
+                </div>
+              ) : chatmsg.type === "admin" ? (
+                <div className="player-admin" key={index}>
+                  {chatmsg.message}
+                </div>
+              ) : (
+                <div key={index}>
                   <div>
                     <div className="chatmsg">
-                      <span className="chatsender">
-                        {chatmsg?.name} : 
-                      </span>
+                      <span className="chatsender">{chatmsg?.name} :</span>
                       <span> {chatmsg?.message}</span>
                     </div>
                   </div>
                 </div>
-              )
-            }
-
-            )}
+              );
+            })}
           </div>
         </div>
         <ClickOutHandler onClickOut={() => props.data.setsubmited(true)}>
@@ -92,7 +99,6 @@ function Chat(props) {
             <input
               type="text"
               onClick={() => props.data.setsubmited(false)}
-
               placeholder="Write  a  message ..."
               className="input-message"
               id="msg"

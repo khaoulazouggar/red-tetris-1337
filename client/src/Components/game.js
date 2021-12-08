@@ -11,6 +11,7 @@ import { useGameStatus } from "../hooks/useGameStatus";
 import NextPiece from "./NextPiece";
 import PlayersStage from "./PlayersStage";
 import { socket } from "../socket/socket";
+import { toast } from "react-toastify";
 
 function Game(props) {
   const [username, setusername] = useState(props.data.username);
@@ -72,6 +73,19 @@ function Game(props) {
         setgetTetrimino(true);
       }
       console.log("tetris", tetriminos);
+    });
+
+    socket.on("wait_admin", () => {
+      // alert("Wait until admin start the game");
+      toast("Wait until admin start the game", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     });
   }, []);
 
@@ -139,7 +153,7 @@ function Game(props) {
         setDropTime(null);
         setgetTetrimino(false);
       }
-      // Drop the next tetrimino
+      // the player has landed, so we can stop moving the tetrimino down and drop the next one
       updatePlayerPos({ x: 0, y: 0, collided: true });
     }
   };
