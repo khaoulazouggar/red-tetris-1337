@@ -6,7 +6,8 @@ class Players {
         players.push({
             name,
             socketId,
-            admin: false
+            admin: false,
+            room: null,
         });
         return players;
     }
