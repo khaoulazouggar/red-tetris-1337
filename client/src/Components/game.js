@@ -37,6 +37,7 @@ function Game(props) {
   // Start Game effect
   useEffect(() => {
     if (gameStart) {
+      console.log("Game Started");
       if (gameOver) {
         setStage(createStage());
         setNextStage(createStage(4, 4));
@@ -53,10 +54,11 @@ function Game(props) {
         setLevel(0);
         setRows(0);
       }
+      console.log("speed", dropTime);
       setstart(false);
       setGameOver(false);
       setGameStart(false);
-      setDropTime(1000);
+      setDropTime(1000 / (level + 1) + 200);
     }
   }, [gameStart]);
 
@@ -110,7 +112,9 @@ function Game(props) {
   //Get Tetriminos for the first time
   function startgame(e) {
     if (e.key === "Enter" && submited) {
+      console.log("Enter");
       if (!getTetrimino) {
+        console.log("Get Tetriminos");
         socket.emit("startgame", { room: props.data.roomName });
       }
     }
@@ -135,6 +139,8 @@ function Game(props) {
       setLevel((prev) => prev + 1);
       // Also increase speed
       setDropTime(1000 / (level + 1) + 200);
+      console.log("speed", dropTime);
+
     }
 
     if (!checkCollision(player, stage, { x: 0, y: 1 })) {

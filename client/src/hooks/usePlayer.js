@@ -67,7 +67,7 @@ export const usePlayer = (setGameOver, setstart, setDropTime, tetriminos, setTet
         } else {
           setPlayer({
             pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
-            tetromino: [tetris.tetromino[1]],
+            tetromino: [tetris.tetromino[0][0] === "I" ? tetris.tetromino[0] : tetris.tetromino[1]],
             collided: false,
           });
           console.log("GAME OVER!!! form resetPlayer");

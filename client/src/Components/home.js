@@ -39,7 +39,7 @@ function Home() {
         window.location.href = `${window.location.origin}/#`;
       }
     } else{
-      console.log("no hash");
+      // console.log("no hash");
       if(username && roomName && created){
         console.log("username and roomname");
         window.location.href = `${window.location.origin}/#${roomName}[${username}]`;
@@ -58,6 +58,7 @@ function Home() {
                 setcreated(false);
                 setclicked(1);
                 setroomName("");
+                setstart(true);
                 window.location.href = `${window.location.origin}/#`;
                 socket.emit("leaveRoom");
               }}
