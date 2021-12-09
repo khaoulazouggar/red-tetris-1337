@@ -1,10 +1,9 @@
-import { useState, useCallback, useEffect } from "react";
-
-import { TETROMINOS, randomTetromino } from "../Components/tetriminos";
+import { useState, useCallback } from "react";
+import { TETROMINOS } from "../Components/tetriminos";
 import { STAGE_WIDTH, checkCollision } from "../Components/gameHelpers";
-import { socket } from "../socket/socket";
 
-export const usePlayer = (setGameOver, setstart, setDropTime,tetriminos,setTetriminos,setgetTetrimino) => {
+export const usePlayer = (setGameOver, setstart, setDropTime, tetriminos, setTetriminos, setgetTetrimino) => {
+  const [concatTetriminos, setConcatTetriminos] = useState(false);
   const [player, setPlayer] = useState({
     pos: { x: 0, y: 0 },
     tetromino: TETROMINOS[0].shape,
@@ -16,13 +15,9 @@ export const usePlayer = (setGameOver, setstart, setDropTime,tetriminos,setTetri
     collided: false,
   });
 
-  const [concatTetriminos, setConcatTetriminos] = useState(false);
-
   function rotate(matrix, dir) {
     // Make the rows to become cols (transpose)
-    const mtrx = matrix.map((_, index) =>
-      matrix.map((column) => column[index])
-    );
+    const mtrx = matrix.map((_, index) => matrix.map((column) => column[index]));
     // Reverse each row to get a rotaded matrix
     if (dir > 0) return mtrx.map((row) => row.reverse());
     return mtrx.reverse();
@@ -54,8 +49,9 @@ export const usePlayer = (setGameOver, setstart, setDropTime,tetriminos,setTetri
     }));
   };
 
+  // useCallback is used to avoid infinite loop
+  // Resets the player position
   const resetPlayer = useCallback((stage) => {
-
       let tetris = {
         pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
         tetromino: TETROMINOS[tetriminos[0]].shape,
@@ -69,7 +65,12 @@ export const usePlayer = (setGameOver, setstart, setDropTime,tetriminos,setTetri
             collided: false,
           });
         } else {
-          console.log("GAME OVER!!!");
+          setPlayer({
+            pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
+            tetromino: [tetris.tetromino[0][0] === "I" ? tetris.tetromino[0] : tetris.tetromino[1]],
+            collided: false,
+          });
+          console.log("GAME OVER!!! form resetPlayer");
           setGameOver(true);
           setstart(true);
           setDropTime(null);
@@ -90,12 +91,12 @@ export const usePlayer = (setGameOver, setstart, setDropTime,tetriminos,setTetri
       });
       tetriminos.shift();
       console.log(tetriminos.length);
-      if(tetriminos.length === 15){
+      if (tetriminos.length === 15) {
         setConcatTetriminos(true);
       }
-    
-    
-  }, [setGameOver, setstart, setDropTime, tetriminos, setTetriminos, setgetTetrimino]);
+    },
+    [setGameOver, setstart, setDropTime, tetriminos, setgetTetrimino]
+  );
 
-  return [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate,concatTetriminos,setConcatTetriminos];
+  return [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate, concatTetriminos, setConcatTetriminos];
 };

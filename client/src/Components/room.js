@@ -72,7 +72,7 @@ function Home(props) {
         draggable: true,
         progress: undefined,
       });
-    } else if (props.data.mode === "batlle" && props.data.start === "In game") {
+    } else if (props.data.mode === "batlle" && props.data.start === false) {
       toast("this room is in game", {
         position: "top-right",
         autoClose: 5000,
