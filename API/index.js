@@ -89,6 +89,12 @@ io.on("connection", async (socket) => {
     });
     io.emit("game_started");
   });
+  socket.on("Stage", (data) => {
+    console.log("---Stage---");
+    console.log("Stage", data.roomName);
+    console.log("Stage", data.stage);
+    console.log("---Stage---");
+  });
 });
 
 server.listen(PORT, () => {

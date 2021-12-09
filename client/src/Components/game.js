@@ -36,11 +36,8 @@ function Game(props) {
 
   // Start Game effect
   useEffect(() => {
-    console.log("gameOver", gameOver);
-    console.log("gameStart", gameStart);
     if (gameStart) {
       if (gameOver) {
-        console.log("bdina");
         setStage(createStage());
         setNextStage(createStage(4, 4));
         resetPlayer();
@@ -63,16 +60,17 @@ function Game(props) {
     }
   }, [gameStart]);
 
+  useEffect(() => {
+    socket.emit("Stage", { stage, roomName: props.data.roomName });
+  }, [stage]);
   //Get Tetriminos effect
   useEffect(() => {
     socket.on("startGame", (tetris) => {
-      console.log("startGame", tetris);
       tetriminos.length > 0 ? setTetriminos([...tetriminos, tetris]) : setTetriminos(tetris);
       if (tetris.length > 0) {
         setGameStart(true);
         setgetTetrimino(true);
       }
-      console.log("tetris", tetriminos);
     });
 
     socket.on("wait_admin", () => {
@@ -95,7 +93,6 @@ function Game(props) {
       socket.emit("startgame", { room: props.data.roomName });
       setConcatTetriminos(false);
     }
-    console.log("tetriminos", tetriminos);
   }, [concatTetriminos]);
 
   // Set focus on the game
@@ -107,13 +104,11 @@ function Game(props) {
 
   // Solo Or Multiplayer
   function handleChange(event) {
-    console.log(event.target.value);
     props.data.setmode(event.target.value);
   }
 
   //Get Tetriminos for the first time
   function startgame(e) {
-    console.log("startgame", getTetrimino);
     if (e.key === "Enter" && submited) {
       if (!getTetrimino) {
         socket.emit("startgame", { room: props.data.roomName });
@@ -162,7 +157,6 @@ function Game(props) {
   const hardDrop = () => {
     let tmp = 0;
     while (!checkCollision(player, stage, { x: 0, y: tmp })) tmp += 1;
-    // console.log(tmp);
     updatePlayerPos({ x: 0, y: tmp - 1, collided: false });
   };
 

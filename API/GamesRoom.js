@@ -79,22 +79,27 @@ class GamesRoom {
   leaveRoom = (io, socket, rooms, players) => {
     return new Promise((resolve, reject) => {
       const playerremoved = players.find((player) => player.socketId === socket.id);
-      const room = playerremoved.room;
-      const Admin = playerremoved.admin;
-      socket.leave(room);
-      io.to(room).emit("chat", { message: `${playerremoved.name} Left the room`, type: "left" });
-      const player = players.filter((plyr) => plyr.socketId === socket.id);
-      player[0].admin = false;
-      player[0].room = "";
-      const playersinRoom = players.filter((plyr) => plyr.room === room);
-      if (Admin && playersinRoom.length > 0) {
-        playersinRoom[0].admin = true;
-        io.to(room).emit("chat", { message: `${playersinRoom[0].name} is the Admin now`, type: "admin" });
-        resolve(true);
+      const room = playerremoved?.room;
+      const Admin = playerremoved?.admin;
+      if (room) {
+        console.log("madkheltch");
+        socket.leave(room);
+        io.to(room).emit("chat", { message: `${playerremoved.name} Left the room`, type: "left" });
+        const player = players.filter((plyr) => plyr.socketId === socket.id);
+        player[0].admin = false;
+        player[0].room = "";
+        const playersinRoom = players.filter((plyr) => plyr.room === room);
+        if (Admin && playersinRoom.length > 0) {
+          playersinRoom[0].admin = true;
+          io.to(room).emit("chat", { message: `${playersinRoom[0].name} is the Admin now`, type: "admin" });
+          resolve(true);
+        } else {
+          const newrooms = rooms.filter((rm) => rm !== room);
+          socket.emit("update_roomList", newrooms);
+          rooms = newrooms;
+          resolve(true);
+        }
       } else {
-        const newrooms = rooms.filter((rm) => rm !== room);
-        socket.emit("update_roomList", newrooms);
-        rooms = newrooms;
         resolve(true);
       }
     });
