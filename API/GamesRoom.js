@@ -10,9 +10,13 @@ class GamesRoom {
 			for (const clientId of clientsList) {
 				player.push(clientId);
 			}
-			for (let i = 0; i < player.length; i++) {
-				if (player[i] === players[i].socketId) roomList.push(players[i].name);
-			}
+			for (let i = 0; i < players.length; i++) {
+				for (let j = 0; j < player.length; j++) {
+					if (players[i].socketId === player[j]) {
+						roomList.push(players[i].name);
+					}
+				}
+			};
 			io.to(room).emit("roomPlayers", roomList);
 		});
 	};
@@ -47,13 +51,14 @@ class GamesRoom {
 	 ** Creates a new room
 	 */
 	createRoom = (io, socket, room, players) => {
-		return new Promise((resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			const player = players.filter((plyr) => plyr.socketId === socket.id);
 			player[0].admin = true;
 			player[0].room = room;
 			socket.join(room);
-			io.to(room).emit("chat", { message: `${player[0]?.name} joined ${room}`, type: "joined" });
+			if (io.to(room).emit("chat", { message: `${player[0]?.name} joined ${room}`, type: "joined" })) resolve(true)
 			this.getClient(io, room, players);
+
 		});
 	};
 	/*

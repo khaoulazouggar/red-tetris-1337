@@ -2,7 +2,8 @@ const initialState = {
 	socket: null,
 	connected: false,
 	tetriminos: [],
-	rooms: []
+	rooms: [],
+	roomPlayers: []
 }
 
 export const sockets = (state = initialState, action) => {
@@ -35,6 +36,11 @@ export const sockets = (state = initialState, action) => {
 			return {
 				...state,
 				rooms: action.rooms
+			}
+		case 'ROOM_PLAYERS_LIST':
+			return {
+				...state,
+				roomPlayers: action.roomPlayers
 			}
 		default:
 			return state;
