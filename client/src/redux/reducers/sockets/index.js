@@ -3,7 +3,8 @@ const initialState = {
 	connected: false,
 	tetriminos: [],
 	rooms: [],
-	roomPlayers: []
+	roomPlayers: [],
+	chat: []
 }
 
 export const sockets = (state = initialState, action) => {
@@ -41,6 +42,11 @@ export const sockets = (state = initialState, action) => {
 			return {
 				...state,
 				roomPlayers: action.roomPlayers
+			}
+		case 'CHAT_MESSAGES':
+			return {
+				...state,
+				chat: [...state.chat, action.messages]
 			}
 		default:
 			return state;

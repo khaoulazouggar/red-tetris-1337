@@ -7,22 +7,15 @@ import { connect } from "react-redux";
 const ClickOutHandler = require("react-onclickout");
 
 function Chat(props) {
-	const { roomPlayers } = props;
+	const { roomPlayers, chat } = props;
 	const [message, setmessage] = useState();
-	const [chat, setChat] = useState([]);
+	// const [chat, setChat] = useState([]);
 	const [playersJoined, setPlayersJoined] = useState([]);
 
 	/*  Socket Area */
 	useEffect(() => {
 		/* Listen for new messages */
-		socket.on("chat", (data) => {
-			console.log("------>", data);
-			setChat((chat) => [...chat, data]);
-		});
-		socket.on("playersJoined", (data) => {
-			console.log("playersJoined", data);
-			setPlayersJoined([...playersJoined, data]);
-		});
+
 	}, []);
 	/* Listen for players List */
 	/* Listener tell us when a player join the room */
@@ -114,6 +107,7 @@ function Chat(props) {
 
 const mapStateToProps = (state) => ({
 	roomPlayers: state.sockets.roomPlayers,
+	chat: state.sockets.chat,
 })
 
 

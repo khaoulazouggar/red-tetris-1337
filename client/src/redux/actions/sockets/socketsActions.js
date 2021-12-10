@@ -60,3 +60,15 @@ export const newTetriminos = (tetris, tetriminos) => {
 	}
 }
 
+
+/*
+** Get Chat Messages
+*/
+export const getChatMessages = (messages) => {
+	return (dispatch) => {
+		dispatch({
+			type: 'CHAT_MESSAGES',
+			messages
+		})
+	}
+}
