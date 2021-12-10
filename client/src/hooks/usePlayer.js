@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { TETROMINOS } from "../Components/tetriminos";
 import { STAGE_WIDTH, checkCollision } from "../Components/gameHelpers";
 
-export const usePlayer = (setGameOver, setstart, setDropTime, tetriminos, setTetriminos, setgetTetrimino) => {
+export const usePlayer = (setGameOver, setstart, setDropTime, tetriminos, setgetTetrimino) => {
   const [concatTetriminos, setConcatTetriminos] = useState(false);
   const [player, setPlayer] = useState({
     pos: { x: 0, y: 0 },

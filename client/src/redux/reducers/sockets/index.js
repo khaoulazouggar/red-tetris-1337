@@ -4,7 +4,7 @@ const initialState = {
 	tetriminos: [],
 }
 
-export const socketreducers = (state = initialState, action) => {
+export const sockets = (state = initialState, action) => {
 	switch (action.type) {
 		case 'SOCKET_CONNECT':
 			return {
@@ -17,6 +17,12 @@ export const socketreducers = (state = initialState, action) => {
 				...state,
 				connected: false,
 				socket: null,
+			};
+		case 'NEW_TETRIMINOS':
+			return {
+				...state,
+				gameStarted: true,
+				tetriminos: action.tetriminos,
 			};
 		case 'START_GAME':
 			return {

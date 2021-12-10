@@ -12,8 +12,10 @@ import NextPiece from "./NextPiece";
 import PlayersStage from "./PlayersStage";
 import { socket } from "../socket/socket";
 import { toast } from "react-toastify";
+import { connect } from "react-redux";
 
 function Game(props) {
+	const { tetriminos } = props;
 	const [username, setusername] = useState(props.data.username);
 	const [roomName, setroomName] = useState(props.data.roomName);
 	const start = props.data.start;
@@ -22,14 +24,14 @@ function Game(props) {
 	const [dropTime, setDropTime] = useState(null);
 	const [submited, setsubmited] = useState(true);
 	const gameRef = useRef(null);
-	const [tetriminos, setTetriminos] = useState([]);
+	// const [tetriminos, setTetriminos] = useState([]);
 	const [getTetrimino, setgetTetrimino] = useState(false);
 	const [gameStart, setGameStart] = useState(false);
 	const [firstDrop, setfirstDrop] = useState(1);
 
 	// Custom Hooks
 	const [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate, concatTetriminos, setConcatTetriminos] =
-		usePlayer(setGameOver, setstart, setDropTime, tetriminos, setTetriminos, setgetTetrimino);
+		usePlayer(setGameOver, setstart, setDropTime, tetriminos, setgetTetrimino);
 	const [stage, nextStage, setStage, setNextStage, rowsCleared] = useStage(player, nextPiece, resetPlayer, gameOver);
 
 	const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
@@ -74,25 +76,30 @@ function Game(props) {
 		// 	}
 		// 	console.log("tetris", tetriminos);
 		// });
-
-		socket.on("wait_admin", () => {
-			// alert("Wait until admin start the game");
-			toast("Wait until admin start the game", {
-				position: "top-right",
-				autoClose: 5000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-				progress: undefined,
-			});
-		});
-	}, []);
+		if (tetriminos.length > 0) {
+			setGameStart(true);
+			setgetTetrimino(true);
+		}
+		// socket.on("wait_admin", () => {
+		// 	// alert("Wait until admin start the game");
+		// 	toast("Wait until admin start the game", {
+		// 		position: "top-right",
+		// 		autoClose: 5000,
+		// 		hideProgressBar: false,
+		// 		closeOnClick: true,
+		// 		pauseOnHover: true,
+		// 		draggable: true,
+		// 		progress: undefined,
+		// 	});
+		// });
+	}, [tetriminos]);
 
 	// Get Tetriminos for the second time
 	useEffect(() => {
 		if (concatTetriminos) {
-			socket.emit("startgame", { room: props.data.roomName });
+			// console.clear()
+			console.log("ga3a");
+			socket.emit("newTetriminos", { room: props.data.roomName });
 			setConcatTetriminos(false);
 		}
 		console.log("tetriminos", tetriminos);
@@ -260,4 +267,9 @@ function Game(props) {
 	);
 }
 
-export default Game;
+const mapStateToProps = (state) => ({
+	tetriminos: state.sockets.tetriminos
+})
+const mapDispatchToProps = {}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Game);

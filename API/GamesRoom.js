@@ -118,6 +118,11 @@ class GamesRoom {
 			io.to(room).emit("startGame", Tetrimios);
 		});
 	};
+	newTetriminos = (io, room, Tetrimios) => {
+		return new Promise((resolve, reject) => {
+			io.to(room).emit("newTetriminos", Tetrimios);
+		});
+	};
 	/*
 	 ** Send Message to Room
 	 */

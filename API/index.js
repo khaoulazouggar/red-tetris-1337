@@ -89,6 +89,10 @@ io.on("connection", async (socket) => {
     });
     io.emit("game_started");
   });
+  socket.on("newTetriminos", async (data) => {
+    const tetriminos = await tetrimios.getTetriminos();
+    Games.newTetriminos(io, data.room, tetriminos);
+  })
   socket.on("Stage", (data) => {
     console.log("---Stage---");
     // console.log("Stage", data.roomName);
