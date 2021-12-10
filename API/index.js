@@ -95,9 +95,9 @@ io.on("connection", async (socket) => {
 	})
 	socket.on("Stage", (data) => {
 		console.log("---Stage---");
+		Games.sendStage(io, data.roomName, data.stage);
 		// console.log("Stage", data.roomName);
 		// console.log("Stage", data.stage);
-		console.log("---Stage---");
 	});
 });
 

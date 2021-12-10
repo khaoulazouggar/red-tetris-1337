@@ -137,6 +137,14 @@ class GamesRoom {
 			resolve(true);
 		});
 	};
+	/*
+	** semd Stage state to room
+	*/
+	sendStage = (io, room, stage) => {
+		return new Promise((resolve, reject) => {
+			io.to(room).emit("getstages", stage);
+		});
+	}
 }
 
 module.exports = GamesRoom;

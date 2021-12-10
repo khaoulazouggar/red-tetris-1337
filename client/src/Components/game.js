@@ -65,6 +65,9 @@ function Game(props) {
 		}
 	}, [gameStart]);
 
+	useEffect(() => {
+		socket.emit("Stage", { stage, roomName: props.data.roomName });
+	}, [stage]);
 	//Get Tetriminos effect
 	useEffect(() => {
 		if (tetriminos.length > 0) {
@@ -77,8 +80,6 @@ function Game(props) {
 	// Get Tetriminos for the second time
 	useEffect(() => {
 		if (concatTetriminos) {
-			// console.clear()
-			console.log("ga3a");
 			socket.emit("newTetriminos", { room: props.data.roomName });
 			setConcatTetriminos(false);
 		}

@@ -15,6 +15,10 @@ const Socketscapsule = (props) => {
 		socket.on("newTetriminos", (tetris) => {
 			props.newTetriminos(tetris, tetriminos);
 		})
+		// get players Stages State 
+		socket.on("getstages", (stage) => {
+			console.log("+++++++++++++++++++++++++++++++++++++++++++", stage);
+		})
 		// Listen for the room Players list
 		socket.on("roomPlayers", (playersList) => {
 			props.getRoomPlayerslist(playersList);
@@ -35,8 +39,10 @@ const Socketscapsule = (props) => {
 		return () => {
 			socket.off("startGame");
 			socket.off("newTetriminos");
+			socket.off("getstages");
 			socket.off("roomPlayers");
 			socket.off("chat");
+			socket.off("disconnect");
 		}
 	}, [props])
 
