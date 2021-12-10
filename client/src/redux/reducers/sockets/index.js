@@ -48,6 +48,20 @@ export const sockets = (state = initialState, action) => {
 				...state,
 				chat: [...state.chat, action.messages]
 			}
+		case 'CLEAR_CHAT_MESSAGES':
+			return {
+				...state,
+				chat: []
+			}
+		case 'CLEAR_ALL_STATE':
+			return {
+				...state,
+				gameStarted: false,
+				tetriminos: [],
+				rooms: [],
+				roomPlayers: [],
+				chat: []
+			}
 		default:
 			return state;
 	}

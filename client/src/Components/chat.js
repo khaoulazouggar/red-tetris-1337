@@ -1,25 +1,16 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { socket } from "../socket/socket";
 import { connect } from "react-redux";
-// import { ClickOutHandler } from "react-onclickout";
 const ClickOutHandler = require("react-onclickout");
 
 function Chat(props) {
 	const { roomPlayers, chat } = props;
 	const [message, setmessage] = useState();
-	// const [chat, setChat] = useState([]);
-	const [playersJoined, setPlayersJoined] = useState([]);
 
-	/*  Socket Area */
-	useEffect(() => {
-		/* Listen for new messages */
 
-	}, []);
-	/* Listen for players List */
-	/* Listener tell us when a player join the room */
-	/* End Socket Area */
+
 	const handleChange = (e) => {
 		setmessage(e.target.value);
 	};

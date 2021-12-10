@@ -61,12 +61,10 @@ io.on("connection", async (socket) => {
 		// console.log("Rooma", io.sockets.adapter);
 	});
 	socket.on("send_message", async (data) => {
-		console.log("Message Received", data);
 		Games.sendMessage(io, data);
 		io.emit("message", data);
 	});
 	socket.on("create_room", async (data) => {
-		console.log("Room Created", data);
 		rooms = [...rooms, data];
 		Games.createRoom(io, socket, data, players)
 			.then(() => {

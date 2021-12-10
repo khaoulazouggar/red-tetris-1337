@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { StartGame, newTetriminos, getRoomPlayerslist, getChatMessages } from "../redux/actions/sockets/socketsActions"
+import { StartGame, newTetriminos, getRoomPlayerslist, getChatMessages, clearAllState } from "../redux/actions/sockets/socketsActions"
 import { socket } from "./socket";
 
 const Socketscapsule = (props) => {
@@ -25,6 +25,12 @@ const Socketscapsule = (props) => {
 		});
 
 
+
+		// Disconnect Listener
+		socket.on("disconnect", () => {
+			console.log("disconnected");
+			props.clearAllState();
+		});
 		// Clean up the event listeners
 		return () => {
 			socket.off("startGame");
@@ -42,6 +48,6 @@ const mapStateToProps = (state) => ({
 	tetriminos: state.sockets.tetriminos
 })
 
-const mapDispatchToProps = { StartGame, newTetriminos, getRoomPlayerslist, getChatMessages }
+const mapDispatchToProps = { StartGame, newTetriminos, getRoomPlayerslist, getChatMessages, clearAllState }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Socketscapsule)

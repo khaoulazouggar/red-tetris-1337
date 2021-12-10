@@ -72,3 +72,25 @@ export const getChatMessages = (messages) => {
 		})
 	}
 }
+
+/*
+** Clear Chat Messages
+*/
+export const clearChatMessages = () => {
+	return (dispatch) => {
+		dispatch({
+			type: 'CLEAR_CHAT_MESSAGES'
+		})
+	}
+}
+
+/*
+** Clear All State
+*/
+export const clearAllState = () => {
+	return (dispatch) => {
+		dispatch({
+			type: 'CLEAR_ALL_STATE'
+		})
+	}
+}

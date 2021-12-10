@@ -67,31 +67,11 @@ function Game(props) {
 
 	//Get Tetriminos effect
 	useEffect(() => {
-		// socket.on("startGame", (tetris) => {
-		// 	console.log("startGame", tetris);
-		// 	tetriminos.length > 0 ? setTetriminos([...tetriminos, tetris]) : setTetriminos(tetris);
-		// 	if (tetris.length > 0) {
-		// 		setGameStart(true);
-		// 		setgetTetrimino(true);
-		// 	}
-		// 	console.log("tetris", tetriminos);
-		// });
 		if (tetriminos.length > 0) {
 			setGameStart(true);
 			setgetTetrimino(true);
 		}
-		// socket.on("wait_admin", () => {
-		// 	// alert("Wait until admin start the game");
-		// 	toast("Wait until admin start the game", {
-		// 		position: "top-right",
-		// 		autoClose: 5000,
-		// 		hideProgressBar: false,
-		// 		closeOnClick: true,
-		// 		pauseOnHover: true,
-		// 		draggable: true,
-		// 		progress: undefined,
-		// 	});
-		// });
+		return () => { }
 	}, [tetriminos]);
 
 	// Get Tetriminos for the second time
