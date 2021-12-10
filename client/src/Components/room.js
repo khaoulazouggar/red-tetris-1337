@@ -5,22 +5,17 @@ import "../scss/room.scss";
 import { socket } from "../socket/socket";
 import Api from "../socket/Api";
 import { toast } from "react-toastify";
+import { connect } from "react-redux";
+import { getRooms } from "../redux/actions/sockets/socketsActions"
 
 function Home(props) {
+  const {getRooms, rooms} = props;
   const [errRoomname, seterrRoomname] = useState("");
-  const [rooms, setrooms] = useState([]);
+  // const [rooms, setrooms] = useState([]);
   const [isTrue, setisTrue] = useState(true);
   const roomRef = useRef(null);
   useEffect(() => {
-    Api()
-      .get("/rooms")
-      .then((res) => {
-        console.log(res.data);
-        setrooms(res?.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    getRooms()
     // eslint-disable-next-line
   }, []);
   useEffect(() => {
@@ -46,13 +41,13 @@ function Home(props) {
   };
   socket.on("room_created", (room) => {
     console.log(room);
-    setrooms([...rooms, room]);
+    // setrooms([...rooms, room]);
   });
 
   const joinRoom = (room) => {
     if (props.data.mode === "solpa") {
       console.log("here")
-      
+
       toast("This is a solo room", {
         position: "top-right",
         autoClose: 5000,
@@ -186,4 +181,10 @@ function Home(props) {
   );
 }
 
-export default Home;
+const mapStateToProps = (state) => ({
+  rooms: state.sockets.rooms
+})
+
+const mapDispatchToProps = { getRooms }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

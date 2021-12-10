@@ -20,12 +20,28 @@ export const usePlayer = (setGameOver, setstart, setDropTime, tetriminos, setget
     const mtrx = matrix.map((_, index) => matrix.map((column) => column[index]));
     // Reverse each row to get a rotaded matrix
     if (dir > 0) return mtrx.map((row) => row.reverse());
-    return mtrx.reverse();
+    return mtrx;
   }
 
   function playerRotate(stage, dir) {
     const clonedPlayer = JSON.parse(JSON.stringify(player));
-    clonedPlayer.tetromino = rotate(clonedPlayer.tetromino, dir);
+    if (clonedPlayer.tetromino.length === 4) {
+        if (clonedPlayer.tetromino[0][0] === "I") {
+          clonedPlayer.tetromino = [
+            [0, "I", 0, 0],
+            [0, "I", 0, 0],
+            [0, "I", 0, 0],
+            [0, "I", 0, 0],
+          ];
+        } else {
+          clonedPlayer.tetromino = [
+            ["I", "I", "I", "I"],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+          ];
+      }
+    } else clonedPlayer.tetromino = rotate(clonedPlayer.tetromino, dir);
 
     const pos = clonedPlayer.pos.x;
     let offset = 1;
@@ -51,7 +67,8 @@ export const usePlayer = (setGameOver, setstart, setDropTime, tetriminos, setget
 
   // useCallback is used to avoid infinite loop
   // Resets the player position
-  const resetPlayer = useCallback((stage) => {
+  const resetPlayer = useCallback(
+    (stage) => {
       let tetris = {
         pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
         tetromino: TETROMINOS[tetriminos[0]].shape,
