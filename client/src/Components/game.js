@@ -32,9 +32,20 @@ function Game(props) {
   // Custom Hooks
   const [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate, concatTetriminos, setConcatTetriminos] =
     usePlayer(setGameOver, setstart, setDropTime, tetriminos, setgetTetrimino);
-  const [stage, nextStage, setStage, setNextStage, rowsCleared] = useStage(player, nextPiece, resetPlayer, gameOver);
+  const [stage, nextStage, setStage, setNextStage, rowsCleared] = useStage(player, nextPiece, resetPlayer, gameOver, start);
 
   const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
+
+  // Add the walls to the stage
+  useEffect(() => {
+    console.log("rowsCleared", rowsCleared);
+    // if(rowsCleared > 0) {
+    //   console.log("here")
+    //   let wall = new Array(10).fill(["Wall", "merged"]);
+    //   stage.push(wall);
+    //   stage.shift();
+    // }
+  }, [rowsCleared]);
 
   // Start Game effect
   useEffect(() => {
@@ -62,7 +73,6 @@ function Game(props) {
       setGameOver(false);
       setGameStart(false);
       setDropTime(1000 / (level + 1) + 200);
-      console.log("dropTime-------start", dropTime);
     }
   }, [gameStart]);
 
@@ -125,13 +135,11 @@ function Game(props) {
 
   // Move the tetrimino down
   const drop = () => {
-    // Increase level when player has cleared 10 rows
+    // Increase level when player has cleared 4 rows
     if (rows > (level + 1) * 3) {
       setLevel((prev) => prev + 1);
       // Also increase speed
       setDropTime(1000 / (level + 1) + 200);
-      console.log("dropTime-------drop", dropTime);
-
     }
 
     if (!checkCollision(player, stage, { x: 0, y: 1 })) {
