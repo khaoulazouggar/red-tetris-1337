@@ -140,9 +140,10 @@ class GamesRoom {
 	/*
 	** semd Stage state to room
 	*/
-	sendStage = (io, room, stage) => {
+	sendStage = (io, room, stage, username) => {
 		return new Promise((resolve, reject) => {
-			io.to(room).emit("getstages", stage);
+			console.log("******************************** bkhoucha");
+			io.to(room).emit("getstages", { stage, username });
 		});
 	}
 }

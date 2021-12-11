@@ -6,11 +6,12 @@ import {
   getRoomPlayerslist,
   getChatMessages,
   clearAllState,
+  setStages
 } from "../redux/actions/sockets/socketsActions";
 import { socket } from "./socket";
 
 const Socketscapsule = (props) => {
-  const { tetriminos } = props;
+  const { tetriminos, Stages } = props;
 
   useEffect(() => {
     // listen for starting the Game
@@ -22,7 +23,10 @@ const Socketscapsule = (props) => {
       props.newTetriminos(tetris, tetriminos);
     });
     // get players Stages State
+    socket.off("getstages");
     socket.on("getstages", (stage) => {
+      console.log('test')
+      props.setStages(Stages, stage);
       // console.log("+++++++++++++++++++++++++++++++++++++++++++", stage);
     });
     // Listen for the room Players list
@@ -56,8 +60,9 @@ const Socketscapsule = (props) => {
 const mapStateToProps = (state) => ({
   sockets: state.sockets,
   tetriminos: state.sockets.tetriminos,
+  Stages: state.sockets.Stages
 });
 
-const mapDispatchToProps = { StartGame, newTetriminos, getRoomPlayerslist, getChatMessages, clearAllState };
+const mapDispatchToProps = { StartGame, newTetriminos, getRoomPlayerslist, getChatMessages, clearAllState, setStages };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Socketscapsule);
