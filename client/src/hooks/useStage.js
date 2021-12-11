@@ -10,7 +10,7 @@ export const useStage = (player, nextPiece, resetPlayer, gameOver) => {
   while (shadow < STAGE_HEIGHT && !checkCollision(player, stage, { x: 0, y: shadow })) {
     shadow++;
   }
-  
+
   useEffect(() => {
     setRowsCleared(0);
     const sweepRows = (newStage) =>
@@ -26,17 +26,17 @@ export const useStage = (player, nextPiece, resetPlayer, gameOver) => {
 
     const updateStage = (prevStage) => {
       // First flush the stage
-      const newStage = prevStage.map((row) => row.map((cell) => (cell[1] === "clear" ? [0, "clear"]: cell  )));
+      const newStage = prevStage.map((row) => row.map((cell) => (cell[1] === "merged" ? cell : [0, "clear"])));
 
       // Then draw the shadow of tetromino
-    //   console.log(shadow);
+      //   console.log(shadow);
       if (shadow) {
         player.tetromino.forEach((row, y) => {
           row.forEach((value, x) => {
             if (value !== 0) {
               newStage[y + player.pos.y + shadow - 1][x + player.pos.x] = [
                 value + "S",
-                `${player.collided ? "merged" : "clear"}`,
+                `${player.collided ? "shadow" : "clear"}`,
               ];
             }
           });
@@ -47,7 +47,10 @@ export const useStage = (player, nextPiece, resetPlayer, gameOver) => {
       player.tetromino.forEach((row, y) => {
         row.forEach((value, x) => {
           if (value !== 0) {
-            newStage[y + player.pos.y][x + player.pos.x] = [value, `${player.collided ? "merged" : "clear"}`];
+            newStage[y + player.pos.y][x + player.pos.x] = [
+              value, 
+              `${player.collided ? "merged" : "clear"}`,
+            ];
           }
         });
       });
