@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { checkCollision, createStage, STAGE_HEIGHT } from "../Components/gameHelpers";
 
-export const useStage = (player, nextPiece, resetPlayer, gameOver) => {
+export const useStage = (player, nextPiece, resetPlayer, gameOver,start) => {
   const [stage, setStage] = useState(createStage());
   const [nextStage, setNextStage] = useState(createStage(4, 4));
   const [rowsCleared, setRowsCleared] = useState(0);

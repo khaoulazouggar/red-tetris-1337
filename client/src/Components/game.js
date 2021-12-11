@@ -45,7 +45,7 @@ function Game(props) {
     //   stage.push(wall);
     //   stage.shift();
     // }
-  }, [stage]);
+  }, [rowsCleared]);
 
   // Start Game effect
   useEffect(() => {
