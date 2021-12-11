@@ -107,7 +107,7 @@ export const usePlayer = (setGameOver, setstart, setDropTime, tetriminos, setget
         collided: false,
       });
       tetriminos.shift();
-      console.log(tetriminos.length);
+      // console.log(tetriminos.length);
       if (tetriminos.length === 15) {
         setConcatTetriminos(true);
       }

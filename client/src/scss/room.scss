@@ -2,6 +2,7 @@
   padding: 1vh;
   flex: 1 1 0%;
   display: flex;
+  overflow: hidden;
 }
 
 .left-field {
@@ -131,6 +132,12 @@
   background-color: #bccdd6b3;
   border-radius: 2px;
   min-height: 66vh;
+  max-height: 73vh;
+    overflow: scroll;
+}
+
+.chat::-webkit-scrollbar{
+  display: none;
 }
 
 .game {
@@ -452,8 +459,8 @@
   justify-content: space-around;
   flex-wrap: wrap;
   max-width: 600px;
-  max-height: 800px;
-  overflow: scroll;
+  // max-height: 800px;
+  // overflow: scroll;
 }
 .players-field::-webkit-scrollbar {
   display: none;
@@ -482,15 +489,18 @@
 //   --toastify-font-family: ArcadeClassic;
 // }
 
-@media only screen and (max-width: 1000px) {
-.room-field{
-  flex-direction: column;
-  overflow: scroll;
-}
+@media only screen and (max-width: 1230px) {
+// .room-field{
+//   flex-direction: column;
+//   overflow: scroll;
+// }
 
-.room-field::-webkit-scrollbar {
+// .room-field::-webkit-scrollbar {
+//   display: none;
+// }
+
+.right-field{
   display: none;
 }
-
 
 }
