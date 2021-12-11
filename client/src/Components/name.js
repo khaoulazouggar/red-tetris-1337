@@ -24,7 +24,7 @@ function Name(props) {
   };
   const handelName = (e) => {
     e?.preventDefault();
-    if(props.data.username)
+    if(props.data.username && !isTrue)
     {
 
       props.data.setclicked(1);
