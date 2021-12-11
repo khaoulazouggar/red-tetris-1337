@@ -85,12 +85,17 @@ export const setStages = (Stages, stage) => {
 				Stages: stage
 			})
 		else {
-			const Stg = Stages.find(stg => stg.username === stage.username)
+			let Stg = Stages.find(stg => stg.username === stage.username)
 			console.log("---------------- Stage 11111----------------", Stg);
-
-			console.log("-----------------------Stages 2-------------------------");
-			console.log(Stages);
-			console.log("-----------------------Stages 2-------------------------");
+			Stg = stage
+			console.log("---------------- Stage 22222----------------", Stg);
+			dispatch({
+				type: 'ADD_STAGES',
+				Stages: Stg
+			})
+			// console.log("-----------------------Stages 2-------------------------");
+			// console.log(Stages);
+			// console.log("-----------------------Stages 2-------------------------");
 		}
 	}
 }

@@ -37,15 +37,15 @@ function Game(props) {
   const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
 
   // Add the walls to the stage
-  useEffect(() => {
-    console.log("rowsCleared", rowsCleared);
-    // if(rowsCleared > 0) {
-    //   console.log("here")
-    //   let wall = new Array(10).fill(["Wall", "merged"]);
-    //   stage.push(wall);
-    //   stage.shift();
-    // }
-  }, [rowsCleared]);
+  // useEffect(() => {
+  //   console.log("rowsCleared", rowsCleared);
+  //   // if(rowsCleared > 0) {
+  //   //   console.log("here")
+  //   //   let wall = new Array(10).fill(["Wall", "merged"]);
+  //   //   stage.push(wall);
+  //   //   stage.shift();
+  //   // }
+  // }, [rowsCleared]);
 
   // Start Game effect
   useEffect(() => {
@@ -77,7 +77,6 @@ function Game(props) {
   }, [gameStart]);
 
   useEffect(() => {
-    console.log('mara 3afak');
     socket.emit("Stage", { stage, roomName: props.data.roomName, username });
   }, [stage]);
   //Get Tetriminos effect

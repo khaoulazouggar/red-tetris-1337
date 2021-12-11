@@ -25,9 +25,7 @@ const Socketscapsule = (props) => {
     // get players Stages State
     socket.off("getstages");
     socket.on("getstages", (stage) => {
-      console.log('test')
       props.setStages(Stages, stage);
-      // console.log("+++++++++++++++++++++++++++++++++++++++++++", stage);
     });
     // Listen for the room Players list
     socket.on("roomPlayers", (playersList) => {
