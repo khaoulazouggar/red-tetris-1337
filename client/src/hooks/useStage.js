@@ -26,7 +26,7 @@ export const useStage = (player, nextPiece, resetPlayer, gameOver) => {
 
     const updateStage = (prevStage) => {
       // First flush the stage
-      const newStage = prevStage.map((row) => row.map((cell) => (cell[1] === "merged" ? cell : [0, "clear"])));
+      const newStage = prevStage.map((row) => row.map((cell) => (cell[1] === "clear" ? [0, "clear"]: cell  )));
 
       // Then draw the shadow of tetromino
     //   console.log(shadow);
