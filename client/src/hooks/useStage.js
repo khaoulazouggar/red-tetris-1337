@@ -74,6 +74,7 @@ export const useStage = (player, nextPiece, resetPlayer, gameOver) => {
     };
 
     // Here are the updates
+    if(!start)
     setStage((prev) => updateStage(prev));
   }, [
     player.collided,
