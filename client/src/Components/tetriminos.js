@@ -78,7 +78,7 @@ export const TETROMINOS = {
     color: "227, 78, 78,0.19",
   },
   Wall: {
-    color: "227, 12, 78,0.19",
+    color: "72, 72, 72,0.8",
   },
 };
 

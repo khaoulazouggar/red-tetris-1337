@@ -32,20 +32,26 @@ function Game(props) {
   // Custom Hooks
   const [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate, concatTetriminos, setConcatTetriminos] =
     usePlayer(setGameOver, setstart, setDropTime, tetriminos, setgetTetrimino);
-  const [stage, nextStage, setStage, setNextStage, rowsCleared] = useStage(player, nextPiece, resetPlayer, gameOver, start);
+  const [stage, nextStage, setStage, setNextStage, rowsCleared] = useStage(
+    player,
+    nextPiece,
+    resetPlayer,
+    gameOver,
+    start
+  );
 
   const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
 
   // Add the walls to the stage
-  useEffect(() => {
-    console.log("rowsCleared", rowsCleared);
-    // if(rowsCleared > 0) {
-    //   console.log("here")
-    //   let wall = new Array(10).fill(["Wall", "merged"]);
-    //   stage.push(wall);
-    //   stage.shift();
-    // }
-  }, [rowsCleared]);
+  // useEffect(() => {
+  //   console.log("rowsCleared", rowsCleared);
+  //   if (rowsCleared > 0) {
+  //     console.log("here");
+  //     let wall = new Array(10).fill(["Wall", "merged"]);
+  //     stage.push(wall);
+  //     stage.shift();
+  //   }
+  // }, [rowsCleared]);
 
   // Start Game effect
   useEffect(() => {

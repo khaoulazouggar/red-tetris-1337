@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { checkCollision, createStage, STAGE_HEIGHT } from "../Components/gameHelpers";
 
-export const useStage = (player, nextPiece, resetPlayer, gameOver,start) => {
+export const useStage = (player, nextPiece, resetPlayer, gameOver, start) => {
   const [stage, setStage] = useState(createStage());
   const [nextStage, setNextStage] = useState(createStage(4, 4));
   const [rowsCleared, setRowsCleared] = useState(0);
@@ -15,7 +15,7 @@ export const useStage = (player, nextPiece, resetPlayer, gameOver,start) => {
     setRowsCleared(0);
     const sweepRows = (newStage) =>
       newStage.reduce((ack, row) => {
-        if (row.findIndex((cell) => cell[0] === 0) === -1) {
+        if (row.findIndex((cell) => cell[0] === 0 || cell[0] === "Wall") === -1) {
           setRowsCleared((prev) => prev + 1);
           ack.unshift(new Array(newStage[0].length).fill([0, "clear"]));
           return ack;
@@ -43,14 +43,20 @@ export const useStage = (player, nextPiece, resetPlayer, gameOver,start) => {
         });
       }
 
+      console.log("rowsCleared", rowsCleared);
+      //Add the wall
+      if (rowsCleared > 0) {
+        console.log("here");
+        let wall = new Array(10).fill(["Wall", "merged"]);
+        newStage.push(wall);
+        newStage.shift();
+      }
+
       // Then draw the tetromino
       player.tetromino.forEach((row, y) => {
         row.forEach((value, x) => {
           if (value !== 0) {
-            newStage[y + player.pos.y][x + player.pos.x] = [
-              value, 
-              `${player.collided ? "merged" : "clear"}`,
-            ];
+            newStage[y + player.pos.y][x + player.pos.x] = [value, `${player.collided ? "merged" : "clear"}`];
           }
         });
       });
@@ -74,8 +80,7 @@ export const useStage = (player, nextPiece, resetPlayer, gameOver,start) => {
     };
 
     // Here are the updates
-    if(!start)
-    setStage((prev) => updateStage(prev));
+    if (!start) setStage((prev) => updateStage(prev));
   }, [
     player.collided,
     player.pos.x,
