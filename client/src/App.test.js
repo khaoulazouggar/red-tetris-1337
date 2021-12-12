@@ -1,0 +1,11 @@
+import { configure, shallow } from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
+import App from "./App";
+import Home from "./components/Home";
+
+describe("App", () => {
+  it("should render home components without crashing", () => {
+    const wrapper = shallow(<App />);
+    expect(wrapper.find(Home).length).toEqual(1);
+  });
+});
