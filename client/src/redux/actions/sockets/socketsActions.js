@@ -79,23 +79,23 @@ export const newTetriminos = (tetris, tetriminos) => {
 
 export const setStages = (Stages, stage) => {
 	return (dispatch) => {
-		if (Stages.length === 0)
+		if (Stages.length === 0) {
+			Stages.push(stage)
 			dispatch({
 				type: 'ADD_STAGES',
-				Stages: stage
+				Stages: Stages
 			})
+		}
 		else {
-			let Stg = Stages.find(stg => stg.username === stage.username)
-			console.log("---------------- Stage 11111----------------", Stg);
-			Stg = stage
-			console.log("---------------- Stage 22222----------------", Stg);
+			let Stg = Stages.filter(stg => stg.username == stage.username)
+			if (Stg[0]?.username)
+				Stg[0].stage = stage.stage
+			else Stages.push(stage)
 			dispatch({
 				type: 'ADD_STAGES',
-				Stages: Stg
+				Stages: Stages
 			})
-			// console.log("-----------------------Stages 2-------------------------");
-			// console.log(Stages);
-			// console.log("-----------------------Stages 2-------------------------");
+
 		}
 	}
 }

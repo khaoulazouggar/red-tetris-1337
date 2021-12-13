@@ -47,7 +47,7 @@ export const sockets = (state = initialState, action) => {
 		case 'ADD_STAGES':
 			{
 				console.log(state,'okokoko')
-				return { ...state, Stages: [...state.Stages, action.Stages] }
+				return { ...state, Stages: action.Stages }
 			}
 		case 'ROOM_PLAYERS_LIST':
 			return {
