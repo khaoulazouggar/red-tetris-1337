@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import { connect } from "react-redux";
 
 function Game(props) {
-  const { tetriminos } = props;
+  const { tetriminos, stages } = props;
   const [username, setusername] = useState(props.data.username);
   const [roomName, setroomName] = useState(props.data.roomName);
   const start = props.data.start;
@@ -91,7 +91,7 @@ function Game(props) {
       setGameStart(true);
       setgetTetrimino(true);
     }
-    return () => { };
+    return () => {};
   }, [tetriminos]);
 
   // Get Tetriminos for the second time
@@ -197,12 +197,17 @@ function Game(props) {
         </div>
         <div className="chat left-chat">
           <div className="players-field">
-            <div style={{ position: "relative", margin: "10px" }}>
-              <span>khaoula</span>
-              <PlayersStage stage={stage} />
-              <div className="players-overlay"></div>
-            </div>
-            <div style={{ position: "relative", margin: "10px" }}>
+            {stages.map((stage, i) => {
+              return (
+                <div style={{ position: "relative", margin: "10px" }} key={i}>
+                  <span>{stage.username}</span>
+                  {console.log("Salam ", stage.username)}
+                  <PlayersStage stage={stage.stage} />
+                  <div className="players-overlay"></div>
+                </div>
+              );
+            })}
+            {/* <div style={{ position: "relative", margin: "10px" }}>
               <span>yassir</span>
               <PlayersStage stage={stage} />
               <div className="players-overlay"></div>
@@ -216,7 +221,7 @@ function Game(props) {
               <span>khaoula</span>
               <PlayersStage stage={stage} />
               <div className="players-overlay"></div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -267,6 +272,7 @@ function Game(props) {
 
 const mapStateToProps = (state) => ({
   tetriminos: state.sockets.tetriminos,
+  stages: state.sockets.Stages,
 });
 const mapDispatchToProps = {};
 

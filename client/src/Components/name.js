@@ -49,6 +49,7 @@ function Name(props) {
         <form className="input-div" onSubmit={handelName}>
           <input
             className="inputfield"
+            id='id1'
             type="text"
             value={props.data.username}
             onChange={(e) => {
