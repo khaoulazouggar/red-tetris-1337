@@ -1,6 +1,19 @@
+import Stage from "../../../Components/Stage"
 import Api from "../../../socket/Api"
 
 /*---------------------------------- Sockets Actions ----------------------------------------------------*/
+
+/* 
+** Set new  player
+*/
+export const newPLayer = (username) => {
+	return (dispatch) => {
+		dispatch({
+			type: 'NEW_PLAYER',
+			userName: username
+		})
+	}
+}
 
 /*
 ** Get room List
@@ -60,6 +73,32 @@ export const newTetriminos = (tetris, tetriminos) => {
 	}
 }
 
+/*
+** Set Stages in multiple game
+*/
+
+export const setStages = (Stages, stage) => {
+	return (dispatch) => {
+		if (Stages.length === 0) {
+			Stages.push(stage)
+			dispatch({
+				type: 'ADD_STAGES',
+				Stages: Stages
+			})
+		}
+		else {
+			let Stg = Stages.filter(stg => stg.username == stage.username)
+			if (Stg[0]?.username)
+				Stg[0].stage = stage.stage
+			else Stages.push(stage)
+			dispatch({
+				type: 'ADD_STAGES',
+				Stages: Stages
+			})
+
+		}
+	}
+}
 
 /*
 ** Get Chat Messages
@@ -94,3 +133,4 @@ export const clearAllState = () => {
 		})
 	}
 }
+

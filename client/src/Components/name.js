@@ -1,10 +1,13 @@
-import { useEffect, useState,useRef} from "react";
+import { useEffect, useState, useRef } from "react";
 import "../scss/home.scss";
 import Isvalidname from "../tools/isvalidname";
 import { socket } from "../socket/socket";
+import { newPLayer } from "../redux/actions/sockets/socketsActions"
+import { connect } from "react-redux";
 
 function Name(props) {
   //   const [username, setusername] = useState("");
+  const { newPLayer } = props;
   const [isTrue, setisTrue] = useState(true);
   const [errusername, seterrusername] = useState("");
   const nameRef = useRef(null);
@@ -24,11 +27,12 @@ function Name(props) {
   };
   const handelName = (e) => {
     e?.preventDefault();
-    if(props.data.username && !isTrue)
-    {
+    if (props.data.username && !isTrue) {
 
       props.data.setclicked(1);
-      socket.emit("new_user", {username: props.data.username});
+      socket.emit("new_user", { username: props.data.username });
+      newPLayer(props.data.username)
+
     }
   };
 
@@ -51,7 +55,7 @@ function Name(props) {
               props.data.setusername(e.target.value);
             }}
             ref={nameRef}
-            // placeholder="Enter your name..."
+          // placeholder="Enter your name..."
           />
           <fieldset aria-hidden="true">
             <legend className="legend-field">
@@ -89,4 +93,10 @@ function Name(props) {
   );
 }
 
-export default Name;
+const mapStateToProps = (state) => ({
+
+})
+
+const mapDispatchToProps = { newPLayer }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Name);

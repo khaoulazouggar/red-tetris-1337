@@ -83,7 +83,7 @@ function Game(props) {
   }, [gameStart]);
 
   useEffect(() => {
-    socket.emit("Stage", { stage, roomName: props.data.roomName });
+    socket.emit("Stage", { stage, roomName: props.data.roomName, username });
   }, [stage]);
   //Get Tetriminos effect
   useEffect(() => {
@@ -91,7 +91,7 @@ function Game(props) {
       setGameStart(true);
       setgetTetrimino(true);
     }
-    return () => {};
+    return () => { };
   }, [tetriminos]);
 
   // Get Tetriminos for the second time

@@ -84,7 +84,6 @@ class GamesRoom {
 			const room = playerremoved?.room;
 			const Admin = playerremoved?.admin;
 			if (room) {
-				console.log("madkheltch");
 				socket.leave(room);
 				io.to(room).emit("chat", { message: `${playerremoved.name} Left the room`, type: "left" });
 				const player = players.filter((plyr) => plyr.socketId === socket.id);
@@ -140,9 +139,9 @@ class GamesRoom {
 	/*
 	** semd Stage state to room
 	*/
-	sendStage = (io, room, stage) => {
+	sendStage = (io, room, stage, username) => {
 		return new Promise((resolve, reject) => {
-			io.to(room).emit("getstages", stage);
+			io.to(room).emit("getstages", { stage, username });
 		});
 	}
 }
