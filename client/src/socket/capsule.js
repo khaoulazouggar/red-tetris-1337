@@ -6,12 +6,13 @@ import {
   getRoomPlayerslist,
   getChatMessages,
   clearAllState,
-  setStages
+  setStages,
+  updateStages
 } from "../redux/actions/sockets/socketsActions";
 import { socket } from "./socket";
 
 const Socketscapsule = (props) => {
-  const { tetriminos, Stages } = props;
+  const { tetriminos, Stages, roomname } = props;
 
   useEffect(() => {
     //initial Socket connection
@@ -31,10 +32,15 @@ const Socketscapsule = (props) => {
       props.newTetriminos(tetris, tetriminos);
     });
     // get players Stages State
-    socket.off("getstages");
     socket.on("getstages", (stage) => {
-      props.setStages(Stages, stage);
+      props.setStages(Stages, stage,roomname);
     });
+    socket.on("updateStages", (stages) => {
+      console.log("--------------------------------");
+      console.log("salam chadi", stages);
+      console.log("--------------------------------");
+      props.updateStages(stages)
+    })
     // Listen for the room Players list
     socket.on("roomPlayers", (playersList) => {
       props.getRoomPlayerslist(playersList);
@@ -66,9 +72,10 @@ const Socketscapsule = (props) => {
 const mapStateToProps = (state) => ({
   sockets: state.sockets,
   tetriminos: state.sockets.tetriminos,
-  Stages: state.sockets.Stages
+  Stages: state.sockets.Stages,
+  roomname: state.sockets.roomname,
 });
 
-const mapDispatchToProps = { StartGame, newTetriminos, getRoomPlayerslist, getChatMessages, clearAllState, setStages };
+const mapDispatchToProps = { StartGame, newTetriminos, getRoomPlayerslist, getChatMessages, clearAllState, setStages, updateStages };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Socketscapsule);
