@@ -10,10 +10,20 @@ describe("Game", () => {
   it("should render components without crashing", () => {
     const wrapper = mount(
       <Provider store={store}>
-        <Game />
+        <Game
+          data={{
+            clicked: 0,
+            setclicked: () => {},
+            username: "ab",
+            setusername: () => {},
+            roomName: "ab",
+            setroomName: () => {},
+            setmode: () => {},
+            start: false,
+            setstart: () => {},
+          }}
+        />
       </Provider>
     );
-
-    console.log(wrapper.debug());
   });
 });
