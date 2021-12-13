@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import { connect } from "react-redux";
 
 function Game(props) {
-  const { tetriminos, stages } = props;
+  const { tetriminos, stages, userName } = props;
   const [username, setusername] = useState(props.data.username);
   const [roomName, setroomName] = useState(props.data.roomName);
   const start = props.data.start;
@@ -199,12 +199,14 @@ function Game(props) {
           <div className="players-field">
             {stages.map((stage, i) => {
               return (
-                <div style={{ position: "relative", margin: "10px" }} key={i}>
-                  <span>{stage.username}</span>
-                  {console.log("Salam ", stage.username)}
-                  <PlayersStage stage={stage.stage} />
-                  <div className="players-overlay"></div>
-                </div>
+                stage.username !== userName && (
+                  <div style={{ position: "relative", margin: "10px" }} key={i}>
+                    <span>{stage.username}</span>
+                    {console.log("Salam ", stage.username)}
+                    <PlayersStage stage={stage.stage} />
+                    <div className="players-overlay"></div>
+                  </div>
+                )
               );
             })}
             {/* <div style={{ position: "relative", margin: "10px" }}>
@@ -273,6 +275,7 @@ function Game(props) {
 const mapStateToProps = (state) => ({
   tetriminos: state.sockets.tetriminos,
   stages: state.sockets.Stages,
+  userName: state.sockets.userName,
 });
 const mapDispatchToProps = {};
 
