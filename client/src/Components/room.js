@@ -87,17 +87,17 @@ function Home(props) {
 					data-aos-duration="2000"
 					data-aos-delay="300"
 				>
-					<form className="room-div">
+					<form className="room-div" onSubmit={handelRoom}>
 						<div className="input-div">
 							<input
 								className="inputfield"
+								id='id2'
 								type="text"
 								value={props.data?.roomName}
 								onChange={(e) => {
 									props.data?.setroomName(e.target.value);
 								}}
-								ref={roomRef}
-								onSubmit={handelRoom}
+								ref={roomRef}							
 							/>
 							<fieldset aria-hidden="false">
 								<legend className="legend-field">

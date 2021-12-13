@@ -6,29 +6,30 @@ export const useStage = (player, nextPiece, resetPlayer, gameOver, start) => {
   const [nextStage, setNextStage] = useState(createStage(4, 4));
   const [rowsCleared, setRowsCleared] = useState(0);
 
-  let shadow = 0;
-  while (shadow < STAGE_HEIGHT && !checkCollision(player, stage, { x: 0, y: shadow })) {
-    shadow++;
-  }
-
+  
+  
   useEffect(() => {
     setRowsCleared(0);
     const sweepRows = (newStage) =>
-      newStage.reduce((ack, row) => {
-        if (row.findIndex((cell) => cell[0] === 0 || cell[0] === "Wall") === -1) {
-          setRowsCleared((prev) => prev + 1);
-          ack.unshift(new Array(newStage[0].length).fill([0, "clear"]));
-          return ack;
-        }
-        ack.push(row);
+    newStage.reduce((ack, row) => {
+      if (row.findIndex((cell) => cell[0] === 0 || cell[0] === "Wall") === -1) {
+        setRowsCleared((prev) => prev + 1);
+        ack.unshift(new Array(newStage[0].length).fill([0, "clear"]));
         return ack;
-      }, []);
-
+      }
+      ack.push(row);
+      return ack;
+    }, []);
+    
     const updateStage = (prevStage) => {
       // First flush the stage
       const newStage = prevStage.map((row) => row.map((cell) => (cell[1] === "merged" ? cell : [0, "clear"])));
-
+      
       // Then draw the shadow of tetromino
+      let shadow = 1;
+      while (shadow < STAGE_HEIGHT && !checkCollision(player, stage, { x: 0, y: shadow })) {
+        shadow++;
+      }
       //   console.log(shadow);
       if (shadow) {
         player.tetromino.forEach((row, y) => {
@@ -36,21 +37,21 @@ export const useStage = (player, nextPiece, resetPlayer, gameOver, start) => {
             if (value !== 0) {
               newStage[y + player.pos.y + shadow - 1][x + player.pos.x] = [
                 value + "S",
-                `${player.collided ? "shadow" : "clear"}`,
+                `${player.collided ? "merged" : "clear"}`,
               ];
             }
           });
         });
       }
 
-      console.log("rowsCleared", rowsCleared);
-      //Add the wall
-      if (rowsCleared > 0) {
-        console.log("here");
-        let wall = new Array(10).fill(["Wall", "merged"]);
-        newStage.push(wall);
-        newStage.shift();
-      }
+      // console.log("rowsCleared", rowsCleared);
+      // //Add the wall
+      // if (rowsCleared > 0) {
+      //   console.log("here");
+      //   let wall = new Array(10).fill(["Wall", "merged"]);
+      //   newStage.push(wall);
+      //   newStage.shift();
+      // }
 
       // Then draw the tetromino
       player.tetromino.forEach((row, y) => {
@@ -90,7 +91,6 @@ export const useStage = (player, nextPiece, resetPlayer, gameOver, start) => {
     nextPiece,
     nextStage,
     gameOver,
-    shadow,
   ]);
 
   return [stage, nextStage, setStage, setNextStage, rowsCleared];
