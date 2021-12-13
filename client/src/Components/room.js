@@ -6,12 +6,11 @@ import { socket } from "../socket/socket";
 import Api from "../socket/Api";
 import { toast } from "react-toastify";
 import { connect } from "react-redux";
-import { getRooms } from "../redux/actions/sockets/socketsActions"
+import { getRooms, newRoom } from "../redux/actions/sockets/socketsActions"
 
 function Home(props) {
-	const { getRooms, rooms } = props;
+	const { getRooms, rooms, newRoom } = props;
 	const [errRoomname, seterrRoomname] = useState("");
-	// const [rooms, setrooms] = useState([]);
 	const [isTrue, setisTrue] = useState(true);
 	const roomRef = useRef(null);
 	useEffect(() => {
@@ -35,6 +34,7 @@ function Home(props) {
 	const handelRoom = (e) => {
 		e?.preventDefault();
 		if (props.data.roomName) {
+			newRoom(props.data.roomName)
 			socket.emit("create_room", props.data.roomName);
 			props.data?.setcreated(true);
 		}
@@ -180,6 +180,6 @@ const mapStateToProps = (state) => ({
 	rooms: state.sockets.rooms
 })
 
-const mapDispatchToProps = { getRooms }
+const mapDispatchToProps = { getRooms, newRoom }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

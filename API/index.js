@@ -93,12 +93,15 @@ io.on("connection", async (socket) => {
 		const tetriminos = await tetrimios.getTetriminos();
 		Games.newTetriminos(io, data.room, tetriminos);
 	})
+
 	socket.on("Stage", (data) => {
-		console.log("---Stage---");
 		Games.sendStage(io, data.roomName, data.stage, data.username);
-		// console.log("Stage", data.roomName);
-		// console.log("Stage", data.stage);
 	});
+
+	socket.on("checkStages", async (data) => {
+
+		Games.checkStages(io, data.Stages, data.stage, data.room)
+	})
 });
 
 server.listen(PORT, () => {

@@ -3,6 +3,7 @@ import Stage from "../../../Components/Stage";
 const initialState = {
 	socket: null,
 	userName: '',
+	roomname: '',
 	connected: false,
 	tetriminos: [],
 	rooms: [],
@@ -33,6 +34,8 @@ export const sockets = (state = initialState, action) => {
 			};
 		case 'NEW_PLAYER':
 			return { ...state, userName: action.userName }
+		case 'NEW_ROOM':
+			return { ...state, roomname: action.roomname }
 		case 'START_GAME':
 			return {
 				...state,
@@ -46,9 +49,10 @@ export const sockets = (state = initialState, action) => {
 			}
 		case 'ADD_STAGES':
 			{
-				console.log(state,'okokoko')
 				return { ...state, Stages: action.Stages }
 			}
+		case 'UPDATE_STAGES':
+			return { ...state, Stages: action.Stages }
 		case 'ROOM_PLAYERS_LIST':
 			return {
 				...state,

@@ -1,5 +1,5 @@
-import Stage from "../../../Components/Stage"
 import Api from "../../../socket/Api"
+import { socket } from "../../../socket/socket"
 
 /*---------------------------------- Sockets Actions ----------------------------------------------------*/
 
@@ -11,6 +11,17 @@ export const newPLayer = (username) => {
 		dispatch({
 			type: 'NEW_PLAYER',
 			userName: username
+		})
+	}
+}
+/* 
+** Set new  player
+*/
+export const newRoom = (roomname) => {
+	return (dispatch) => {
+		dispatch({
+			type: 'NEW_ROOM',
+			roomname
 		})
 	}
 }
@@ -77,7 +88,7 @@ export const newTetriminos = (tetris, tetriminos) => {
 ** Set Stages in multiple game
 */
 
-export const setStages = (Stages, stage) => {
+export const setStages = (Stages, stage, roomname) => {
 	return (dispatch) => {
 		if (Stages.length === 0) {
 			Stages.push(stage)
@@ -90,7 +101,10 @@ export const setStages = (Stages, stage) => {
 			let Stg = Stages.filter(stg => stg.username == stage.username)
 			if (Stg[0]?.username)
 				Stg[0].stage = stage.stage
-			else Stages.push(stage)
+			else {
+				Stages.push(stage)
+				socket.emit("checkStages", { Stages, stage, room: roomname })
+			}
 			dispatch({
 				type: 'ADD_STAGES',
 				Stages: Stages
@@ -99,7 +113,14 @@ export const setStages = (Stages, stage) => {
 		}
 	}
 }
-
+/*
+** Update stages state on redux
+*/
+export const updateStages = (Stages) => {
+	return (dispatch) => {
+		dispatch({ type: 'UPDATE_STAGES', Stages: Stages.Stages })
+	}
+}
 /*
 ** Get Chat Messages
 */

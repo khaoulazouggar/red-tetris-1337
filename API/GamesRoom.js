@@ -144,6 +144,15 @@ class GamesRoom {
 			io.to(room).emit("getstages", { stage, username });
 		});
 	}
+	/*
+	** Check Stages state and send it to the rooms
+	*/
+	checkStages = (io, Stages, stage, room) => {
+		return new Promise((resolve, reject) => {
+			io.to(room).emit("updateStages", { Stages });
+
+		})
+	}
 }
 
 module.exports = GamesRoom;
