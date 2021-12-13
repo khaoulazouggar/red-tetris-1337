@@ -28,9 +28,6 @@ const Socketscapsule = (props) => {
       props.setStages(Stages, stage,roomname);
     });
     socket.on("updateStages", (stages) => {
-      console.log("--------------------------------");
-      console.log("salam chadi", stages);
-      console.log("--------------------------------");
       props.updateStages(stages)
     })
     // Listen for the room Players list
