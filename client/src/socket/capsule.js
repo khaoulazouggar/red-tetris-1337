@@ -13,6 +13,14 @@ const Socketscapsule = (props) => {
   const { tetriminos } = props;
 
   useEffect(() => {
+    //initial Socket connection
+    socket.on("connect", () => {
+      console.log("connected");
+    });
+
+    socket.on("disconnect", () => {
+      console.log("disconnected");
+    });
     // listen for starting the Game
     socket.on("startGame", (tetris) => {
       props.StartGame(tetris);
