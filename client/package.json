@@ -63,7 +63,7 @@
   "jest": {
     "collectCoverageFrom": [
       "!src/hooks/**",
-      "!src/Components/__snapshots__/**",
+      "!src/Components/styles/**",
       "!src/socket/**" 
     ]
   },
