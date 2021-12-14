@@ -9,7 +9,7 @@ import { connect } from "react-redux"
 import { clearChatMessages } from "../redux/actions/sockets/socketsActions";
 
 function Home(props) {
-	const { clearChatMessages } = props;
+	const { clearChatMessages, stages } = props;
 	const [username, setusername] = useState("");
 	const [clicked, setclicked] = useState(0);
 	const [created, setcreated] = useState(false);
@@ -29,6 +29,8 @@ function Home(props) {
 						setusername(hash.substring(i + 1, hash.length - 1));
 						setclicked(2);
 						setcreated(true);
+						if (username && roomName)
+							socket.emit("create_user_room", { username, room: roomName, stages })
 						break;
 					}
 					i++;
@@ -44,7 +46,6 @@ function Home(props) {
 		} else {
 			// console.log("no hash");
 			if (username && roomName && created) {
-				console.log("username and roomname");
 				window.location.href = `${window.location.origin}/#${roomName}[${username}]`;
 			}
 		}
@@ -95,7 +96,9 @@ function Home(props) {
 	);
 }
 
-const mapStatetoProps = (state) => ({})
+const mapStatetoProps = (state) => ({
+	stages: state.sockets.stages
+})
 
 const mapDispatchtoProps = { clearChatMessages }
 export default connect(mapStatetoProps, mapDispatchtoProps)(Home);

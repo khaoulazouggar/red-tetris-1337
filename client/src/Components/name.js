@@ -7,17 +7,25 @@ import { connect } from "react-redux";
 
 function Name(props) {
   //   const [username, setusername] = useState("");
-  const { newPLayer } = props;
+  const { newPLayer, userexists } = props;
   const [isTrue, setisTrue] = useState(true);
   const [errusername, seterrusername] = useState("");
   const nameRef = useRef(null);
   useEffect(() => {
     nameRef.current.focus();
     props.data.username ? setisTrue(false) : setisTrue(true);
+
     checkUsername();
     // eslint-disable-next-line
   }, [props.data.username, isTrue]);
 
+  useEffect(() => {
+    if (userexists !== null && userexists)
+      alert("kayn had l user")
+    else if (userexists !== null && !userexists) {
+      props.data.setclicked(1);
+    }
+  }, [userexists])
   //handle check username inputs
   const checkUsername = () => {
     if (Isvalidname(props.data.username)) {
@@ -29,11 +37,13 @@ function Name(props) {
     e?.preventDefault();
     if (props.data.username && !isTrue) {
 
-      props.data.setclicked(1);
+
+
       socket.emit("new_user", { username: props.data.username });
       newPLayer(props.data.username)
 
     }
+
   };
 
   return (
@@ -95,7 +105,7 @@ function Name(props) {
 }
 
 const mapStateToProps = (state) => ({
-
+  userexists: state.sockets.userexists
 })
 
 const mapDispatchToProps = { newPLayer }

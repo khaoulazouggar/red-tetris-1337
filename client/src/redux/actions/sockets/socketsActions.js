@@ -14,6 +14,17 @@ export const newPLayer = (username) => {
 		})
 	}
 }
+/*
+** USER_ EXISTS
+*/
+export const userExists = (userexists) => {
+	return (dispatch) => {
+		dispatch({
+			type: 'USER_EXISTS',
+			userexists
+		})
+	}
+}
 /* 
 ** Set new  player
 */
@@ -98,7 +109,7 @@ export const setStages = (Stages, stage, roomname) => {
 			})
 		}
 		else {
-			let Stg = Stages.filter(stg => stg.username == stage.username)
+			let Stg = Stages.filter(stg => stg.username === stage.username)
 			if (Stg[0]?.username)
 				Stg[0].stage = stage.stage
 			else {
@@ -119,6 +130,16 @@ export const setStages = (Stages, stage, roomname) => {
 export const updateStages = (Stages) => {
 	return (dispatch) => {
 		dispatch({ type: 'UPDATE_STAGES', Stages: Stages.Stages })
+	}
+}
+
+/*
+** Delete user from Stages
+*/
+export const deleteUserfromStages = (username, stages) => {
+	return (dispatch) => {
+		const newStages = stages.filter(stage => stage.username !== username)
+		dispatch({ type: 'UPDATE_STAGES', Stages: newStages })
 	}
 }
 /*

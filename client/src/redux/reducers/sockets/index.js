@@ -1,6 +1,7 @@
 import Stage from "../../../Components/Stage";
 
 const initialState = {
+	userexists: null,
 	socket: null,
 	userName: '',
 	roomname: '',
@@ -32,6 +33,8 @@ export const sockets = (state = initialState, action) => {
 				gameStarted: true,
 				tetriminos: action.tetriminos,
 			};
+		case 'USER_EXISTS':
+			return {...state, userexists: action.userexists}
 		case 'NEW_PLAYER':
 			return { ...state, userName: action.userName }
 		case 'NEW_ROOM':

@@ -86,6 +86,7 @@ class GamesRoom {
 			if (room) {
 				socket.leave(room);
 				io.to(room).emit("chat", { message: `${playerremoved.name} Left the room`, type: "left" });
+				io.to(room).emit("clearStages", { username: playerremoved.name });
 				const player = players.filter((plyr) => plyr.socketId === socket.id);
 				player[0].admin = false;
 				player[0].room = "";
@@ -93,15 +94,15 @@ class GamesRoom {
 				if (Admin && playersinRoom.length > 0) {
 					playersinRoom[0].admin = true;
 					io.to(room).emit("chat", { message: `${playersinRoom[0].name} is the Admin now`, type: "admin" });
-					resolve(true);
+					resolve({ status: true, playerremoved, rooms });
 				} else {
 					const newrooms = rooms.filter((rm) => rm !== room);
 					socket.emit("update_roomList", newrooms);
 					rooms = newrooms;
-					resolve(true);
+					resolve({ status: true, playerremoved, rooms });
 				}
 			} else {
-				resolve(true);
+				resolve({ status: true, playerremoved, rooms });
 			}
 		});
 	};
