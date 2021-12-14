@@ -63,8 +63,8 @@
   "jest": {
     "collectCoverageFrom": [
       "!src/hooks/**",
-      "!src/Components/styles/**",
-      "!src/socket/**" 
+      "!src/socket/**",
+      "!src/redux/**"
     ]
   },
   "devDependencies": {
