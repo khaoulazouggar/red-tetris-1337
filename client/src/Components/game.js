@@ -212,21 +212,6 @@ function Game(props) {
                 )
               );
             })}
-            {/* <div style={{ position: "relative", margin: "10px" }}>
-              <span>yassir</span>
-              <PlayersStage stage={stage} />
-              <div className="players-overlay"></div>
-            </div>
-            <div style={{ position: "relative", margin: "10px" }}>
-              <span>yassir</span>
-              <PlayersStage stage={stage} />
-              <div className="players-overlay"></div>
-            </div>
-            <div style={{ position: "relative", margin: "10px" }}>
-              <span>khaoula</span>
-              <PlayersStage stage={stage} />
-              <div className="players-overlay"></div>
-            </div> */}
           </div>
         </div>
       </div>
