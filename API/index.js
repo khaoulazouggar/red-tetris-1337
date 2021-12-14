@@ -53,20 +53,18 @@ io.on("connection", async (socket) => {
 
 	socket.on("create_user_room", async (data) => {
 		const plyr = players.find(p => p.name === data.username && p.socketId === socket.id);
-		console.log("--------------------- khraya 1------------------------");
-		console.log(plyr);
-		console.log("--------------------- khraya 1------------------------");
 		if (plyr === undefined)
 			player.updatePlayer(io, socket, data, players)
 				.then(res => {
 					players = res
-					console.log("--------------------- khraya 2------------------------");
-					console.log(players);
-					console.log("--------------------- khraya 2------------------------");
 					const rm = rooms.find(room => room === data.room)
-					console.log("--------------------- khraya 3------------------------");
-					console.log(rm);
-					console.log("--------------------- khraya 3------------------------");
+					if (rm === undefined) {
+						rooms = [...rooms, data.room];
+						Games.createRoom(io, socket, data.room, players)
+					}
+					else {
+						Games.joinRoom(io, socket, data.room, players);
+					}
 				})
 	})
 	socket.on("disconnect", () => {
@@ -97,9 +95,9 @@ io.on("connection", async (socket) => {
 	});
 	socket.on("leaveRoom", () => {
 		Games.leaveRoom(io, socket, rooms, players)
-		.then(res => {
-			if (res.status) rooms = res.rooms
-		})
+			.then(res => {
+				if (res.status) rooms = res.rooms
+			})
 	});
 	socket.on("startgame", async (data) => {
 		Games.getUser(io, socket.id, data.room, players).then(async (user) => {

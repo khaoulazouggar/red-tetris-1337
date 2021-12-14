@@ -1,4 +1,3 @@
-import Stage from "../../../Components/Stage";
 
 const initialState = {
 	userexists: null,
@@ -34,7 +33,7 @@ export const sockets = (state = initialState, action) => {
 				tetriminos: action.tetriminos,
 			};
 		case 'USER_EXISTS':
-			return {...state, userexists: action.userexists}
+			return { ...state, userexists: action.userexists }
 		case 'NEW_PLAYER':
 			return { ...state, userName: action.userName }
 		case 'NEW_ROOM':
@@ -71,9 +70,6 @@ export const sockets = (state = initialState, action) => {
 				...state,
 				chat: []
 			}
-
-
-
 
 		case 'CLEAR_ALL_STATE':
 			return {

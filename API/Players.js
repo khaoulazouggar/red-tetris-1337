@@ -24,15 +24,16 @@ class Players {
 		return newplayers;
 	};
 	updatePlayer = async (io, socket, data, players) => {
-		// const plyr = players.find(p => p.socketId === socket.socketId && p.name )
-		const newplayers = await players.filter((player) => {player.name !== data.username && player.socketId !== socket.id});
-		newplayers.push({
-			name: data.username,
-			socketId: socket.id,
-			admin: false,
-			room: "",
+		return new Promise(async (resolve, reject) => {
+			const newplayers = await players.filter((player) => player.name !== data.username);
+			newplayers.push({
+				name: data.username,
+				socketId: socket.id,
+				admin: false,
+				room: "",
+			});
+			resolve(newplayers)
 		});
-		return newplayers
 	}
 }
 

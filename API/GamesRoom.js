@@ -52,12 +52,14 @@ class GamesRoom {
 	 */
 	createRoom = (io, socket, room, players) => {
 		return new Promise(async (resolve, reject) => {
+			console.log("createRoom");
+			console.log(room);
 			const player = players.filter((plyr) => plyr.socketId === socket.id);
 			player[0].admin = true;
 			player[0].room = room;
 			socket.join(room);
-			if (io.to(room).emit("chat", { message: `${player[0]?.name} joined ${room}`, type: "joined" })) resolve(true)
-			this.getClient(io, room, players);
+			if (io.to(room).emit("chat", { message: `${player[0]?.name} joined ${room}`, type: "joined" }))
+				this.getClient(io, room, players);
 
 		});
 	};
@@ -66,11 +68,13 @@ class GamesRoom {
 	 */
 	joinRoom = (io, socket, room, players) => {
 		return new Promise((resolve, reject) => {
+			console.log("joinedeRoom");
+			console.log(room);
 			const player = players.filter((plyr) => plyr.socketId === socket.id);
 			player[0].room = room;
-			console.log("players in room", players);
 			socket.join(room);
 			this.getClient(io, room, players);
+			console.log("players in room", players);
 			io.to(room).emit("chat", { message: `${player[0]?.name} joined ${room}`, type: "joined" });
 		});
 	};
