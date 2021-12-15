@@ -28,7 +28,6 @@ const io = socketio(server, {
 
 app.use(cors());
 app.get("/rooms", (req, res) => {
-	console.log("-----------", rooms);
 	res.send(rooms);
 });
 
@@ -43,7 +42,7 @@ io.on("connection", async (socket) => {
 
 	socket.on("new_user", (data) => {
 		player
-			.newPlayer(data.username, socket.id, players)
+			.newPlayer(io, data.username, socket.id, players)
 			.then(() => {
 				socket.emit("welcome");
 			})
@@ -51,14 +50,33 @@ io.on("connection", async (socket) => {
 				socket.emit("welcome_error");
 			});
 	});
+
+	socket.on("create_user_room", async (data) => {
+		const plyr = players.find(p => p.name === data.username && p.socketId === socket.id);
+		if (plyr === undefined)
+			player.updatePlayer(io, socket, data, players)
+				.then(res => {
+					players = res
+					const rm = rooms.find(room => room === data.room)
+					if (rm === undefined) {
+						rooms = [...rooms, data.room];
+						Games.createRoom(io, socket, data.room, players)
+					}
+					else {
+						Games.joinRoom(io, socket, data.room, players);
+					}
+				})
+	})
 	socket.on("disconnect", () => {
-		// Games.deletePlayer(socket.id, players)
 		Games.leaveRoom(io, socket, rooms, players).then((res) => {
-			console.log("disconnect", res);
-			Games.deletePlayer(socket, players);
+			if (res.status) {
+				rooms = res.rooms
+				player.deletePlayer(res.playerremoved, players)
+					.then(res => {
+						players = res
+					})
+			}
 		});
-		console.log("Client Disconnected");
-		// console.log("Rooma", io.sockets.adapter);
 	});
 	socket.on("send_message", async (data) => {
 		Games.sendMessage(io, data);
@@ -76,7 +94,10 @@ io.on("connection", async (socket) => {
 		io.emit("room_joined", data);
 	});
 	socket.on("leaveRoom", () => {
-		Games.leaveRoom(io, socket, rooms, players);
+		Games.leaveRoom(io, socket, rooms, players)
+			.then(res => {
+				if (res.status) rooms = res.rooms
+			})
 	});
 	socket.on("startgame", async (data) => {
 		Games.getUser(io, socket.id, data.room, players).then(async (user) => {

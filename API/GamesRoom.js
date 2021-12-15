@@ -52,12 +52,14 @@ class GamesRoom {
 	 */
 	createRoom = (io, socket, room, players) => {
 		return new Promise(async (resolve, reject) => {
+			console.log("createRoom");
+			console.log(room);
 			const player = players.filter((plyr) => plyr.socketId === socket.id);
 			player[0].admin = true;
 			player[0].room = room;
 			socket.join(room);
-			if (io.to(room).emit("chat", { message: `${player[0]?.name} joined ${room}`, type: "joined" })) resolve(true)
-			this.getClient(io, room, players);
+			if (io.to(room).emit("chat", { message: `${player[0]?.name} joined ${room}`, type: "joined" }))
+				this.getClient(io, room, players);
 
 		});
 	};
@@ -66,11 +68,13 @@ class GamesRoom {
 	 */
 	joinRoom = (io, socket, room, players) => {
 		return new Promise((resolve, reject) => {
+			console.log("joinedeRoom");
+			console.log(room);
 			const player = players.filter((plyr) => plyr.socketId === socket.id);
 			player[0].room = room;
-			console.log("players in room", players);
 			socket.join(room);
 			this.getClient(io, room, players);
+			console.log("players in room", players);
 			io.to(room).emit("chat", { message: `${player[0]?.name} joined ${room}`, type: "joined" });
 		});
 	};
@@ -86,6 +90,7 @@ class GamesRoom {
 			if (room) {
 				socket.leave(room);
 				io.to(room).emit("chat", { message: `${playerremoved.name} Left the room`, type: "left" });
+				io.to(room).emit("clearStages", { username: playerremoved.name });
 				const player = players.filter((plyr) => plyr.socketId === socket.id);
 				player[0].admin = false;
 				player[0].room = "";
@@ -93,15 +98,15 @@ class GamesRoom {
 				if (Admin && playersinRoom.length > 0) {
 					playersinRoom[0].admin = true;
 					io.to(room).emit("chat", { message: `${playersinRoom[0].name} is the Admin now`, type: "admin" });
-					resolve(true);
+					resolve({ status: true, playerremoved, rooms });
 				} else {
 					const newrooms = rooms.filter((rm) => rm !== room);
 					socket.emit("update_roomList", newrooms);
 					rooms = newrooms;
-					resolve(true);
+					resolve({ status: true, playerremoved, rooms });
 				}
 			} else {
-				resolve(true);
+				resolve({ status: true, playerremoved, rooms });
 			}
 		});
 	};

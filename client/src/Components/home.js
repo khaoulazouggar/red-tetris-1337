@@ -6,10 +6,10 @@ import Game from "../Components/game";
 import { ToastContainer } from "react-toastify";
 import { socket } from "../socket/socket";
 import { connect } from "react-redux"
-import { clearChatMessages } from "../redux/actions/sockets/socketsActions";
+import { clearChatMessages, newPLayer, newRoom } from "../redux/actions/sockets/socketsActions";
 
 function Home(props) {
-	const { clearChatMessages } = props;
+	const { clearChatMessages, stages, newPLayer, newRoom } = props;
 	const [username, setusername] = useState("");
 	const [clicked, setclicked] = useState(0);
 	const [created, setcreated] = useState(false);
@@ -29,13 +29,14 @@ function Home(props) {
 						setusername(hash.substring(i + 1, hash.length - 1));
 						setclicked(2);
 						setcreated(true);
-						break;
+						if (username && roomName) {
+							socket.emit("create_user_room", { username, room: roomName, stages })
+							newPLayer(username);
+							newRoom(roomName);
+						} break;
 					}
 					i++;
 				}
-				console.log(hash);
-				// console.log(hash.substring(0, i));
-				// console.log(hash.substring(i + 1, hash.length - 1));
 			}
 			else {
 				if (clicked === 0)
@@ -44,7 +45,6 @@ function Home(props) {
 		} else {
 			// console.log("no hash");
 			if (username && roomName && created) {
-				console.log("username and roomname");
 				window.location.href = `${window.location.origin}/#${roomName}[${username}]`;
 			}
 		}
@@ -95,7 +95,9 @@ function Home(props) {
 	);
 }
 
-const mapStatetoProps = (state) => ({})
+const mapStatetoProps = (state) => ({
+	stages: state.sockets.stages
+})
 
-const mapDispatchtoProps = { clearChatMessages }
+const mapDispatchtoProps = { clearChatMessages, newPLayer, newRoom }
 export default connect(mapStatetoProps, mapDispatchtoProps)(Home);
