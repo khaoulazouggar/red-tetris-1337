@@ -116,6 +116,7 @@ function Game(props) {
 	function handleChange(event) {
 		console.log(event.target.value);
 		props.data.setmode(event.target.value);
+		socket.emit("updateroomMode", { mode: event.target.value, roomName: props.data.roomName });
 	}
 
 	//Get Tetriminos for the first time

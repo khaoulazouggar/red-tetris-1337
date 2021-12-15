@@ -90,7 +90,7 @@ io.on("connection", async (socket) => {
 			})
 	});
 	socket.on("join_room", (data) => {
-		Games.joinRoom(io, socket, data,rooms, players);
+		Games.joinRoom(io, socket, data, rooms, players);
 		io.emit("room_joined", data);
 	});
 	socket.on("leaveRoom", () => {
@@ -121,7 +121,6 @@ io.on("connection", async (socket) => {
 	});
 
 	socket.on("checkStages", async (data) => {
-
 		Games.checkStages(io, data.Stages, data.stage, data.room)
 	})
 });
