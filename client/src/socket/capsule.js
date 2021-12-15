@@ -59,6 +59,9 @@ const Socketscapsule = (props) => {
       props.getChatMessages(message);
     });
 
+    socket.on("room_full", () => {
+      alert("rooom full")
+    })
     
     // Disconnect Listener
     socket.on("disconnect", () => {

@@ -21,6 +21,27 @@ class GamesRoom {
 		});
 	};
 	/*
+	** Get room users list
+	*/
+	getroomUsers = (io, room, players) => {
+		return new Promise((resolve, reject) => {
+			const player = [];
+			const roomList = [];
+			const clientsList = io.sockets.adapter.rooms.get(room);
+			for (const clientId of clientsList) {
+				player.push(clientId);
+			}
+			for (let i = 0; i < players.length; i++) {
+				for (let j = 0; j < player.length; j++) {
+					if (players[i].socketId === player[j]) {
+						roomList.push(players[i].name);
+					}
+				}
+			};
+			resolve(roomList);
+		})
+	}
+	/*
 	 ** Get user from room
 	 */
 	getUser = (io, socketId, room, players) => {
@@ -66,16 +87,26 @@ class GamesRoom {
 	/*
 	 ** Join Room already created
 	 */
-	joinRoom = (io, socket, room, players) => {
+	joinRoom = (io, socket, room, rooms, players) => {
 		return new Promise((resolve, reject) => {
-			console.log("joinedeRoom");
-			console.log(room);
-			const player = players.filter((plyr) => plyr.socketId === socket.id);
-			player[0].room = room;
-			socket.join(room);
-			this.getClient(io, room, players);
-			console.log("players in room", players);
-			io.to(room).emit("chat", { message: `${player[0]?.name} joined ${room}`, type: "joined" });
+			const room_data = rooms.find(rm => rm.name === room)
+			console.log("----------------------------room data ---------------------");
+			console.log(room_data);
+			console.log("----------------------------room data ---------------------");
+			this.getroomUsers(io, room, players).then((users) => {
+				if (users.length < 5) {
+					const player = players.filter((plyr) => plyr.socketId === socket.id);
+					player[0].room = room;
+					socket.join(room);
+					this.getClient(io, room, players);
+					console.log("players in room", players);
+					io.to(room).emit("chat", { message: `${player[0]?.name} joined ${room}`, type: "joined" });
+				}
+				else {
+					io.to(socket.id).emit("room_full")
+				}
+			})
+
 		});
 	};
 	/*

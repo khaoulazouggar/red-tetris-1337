@@ -90,7 +90,7 @@ io.on("connection", async (socket) => {
 			})
 	});
 	socket.on("join_room", (data) => {
-		Games.joinRoom(io, socket, data, players);
+		Games.joinRoom(io, socket, data,rooms, players);
 		io.emit("room_joined", data);
 	});
 	socket.on("leaveRoom", () => {
