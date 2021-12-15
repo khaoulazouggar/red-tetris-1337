@@ -189,6 +189,14 @@ class GamesRoom {
 
 		})
 	}
+	/*
+	** Change room mode solo/buttle
+	*/
+	updateroomMode = (io, data, rooms) => {
+		return new Promise((resolve, reject) => {
+			
+		})
+	}
 }
 
 module.exports = GamesRoom;
