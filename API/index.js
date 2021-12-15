@@ -123,6 +123,11 @@ io.on("connection", async (socket) => {
 	socket.on("checkStages", async (data) => {
 		Games.checkStages(io, data.Stages, data.stage, data.room)
 	})
+
+
+	socket.on("updateroomMode", async data => {
+		console.log(data);
+	})
 });
 
 server.listen(PORT, () => {
