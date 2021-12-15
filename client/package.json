@@ -64,7 +64,8 @@
     "collectCoverageFrom": [
       "!src/hooks/**",
       "!src/socket/**",
-      "!src/redux/**"
+      "!src/redux/**",
+      "!src/Components/styles/**"
     ]
   },
   "devDependencies": {

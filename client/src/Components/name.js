@@ -4,6 +4,7 @@ import Isvalidname from "../tools/isvalidname";
 import { socket } from "../socket/socket";
 import { newPLayer } from "../redux/actions/sockets/socketsActions"
 import { connect } from "react-redux";
+import { toast } from "react-toastify";
 
 function Name(props) {
 	//   const [username, setusername] = useState("");
@@ -21,7 +22,17 @@ function Name(props) {
 
 	useEffect(() => {
 		if (userexists !== null && userexists)
-			alert("kayn had l user")
+			{
+				toast("This user is already exists", {
+					position: "top-right",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+				});
+			}
 		else if (userexists !== null && !userexists) {
 			props.data.setclicked(1);
 		}
