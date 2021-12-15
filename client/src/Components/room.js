@@ -41,8 +41,6 @@ function Home(props) {
 	};
 	const joinRoom = (room) => {
 		if (props.data.mode === "soloa") {
-			//   console.log("here");
-
 			toast("This is a solo room", {
 				position: "top-right",
 				autoClose: 5000,
@@ -52,7 +50,7 @@ function Home(props) {
 				draggable: true,
 				progress: undefined,
 			});
-		} else if (props.data.mode === "4/4") {
+		} else if (props.data.mode === "5/5") {
 			toast("this room is full", {
 				position: "top-right",
 				autoClose: 5000,
@@ -139,11 +137,11 @@ function Home(props) {
 						{rooms.length > 0 &&
 							rooms.map((room, i) => {
 								return (
-									<div className="list-item" key={i} onClick={() => joinRoom(room)}>
-										<div className="content-list-item">{room}</div>
-										<div className="content-list-item">{props.data.mode}</div>
-										<div className="content-list-item">{props.data.mode === "solo" ? "1/1" : "1/4"}</div>
-										<div className="content-list-item">{props.data.start ? "In Menu" : "In game"}</div>
+									<div className="list-item" key={i} onClick={() => joinRoom(room.name)}>
+										<div className="content-list-item">{room.name}</div>
+										<div className="content-list-item">{room.mode}</div>
+										<div className="content-list-item">{`${room.players}/${room.maxplayers}`}</div>
+										<div className="content-list-item">{room.state ? "In Menu" : "In game"}</div>
 									</div>
 								);
 							})}

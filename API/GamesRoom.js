@@ -27,7 +27,7 @@ class GamesRoom {
 		return new Promise((resolve, reject) => {
 			const player = [];
 			let Admin;
-			const clientsList = io.sockets.adapter.rooms.get(room);
+			const clientsList = io.sockets.adapter.rooms.get(room.name);
 			for (const clientId of clientsList) {
 				player.push(clientId);
 			}
@@ -100,7 +100,7 @@ class GamesRoom {
 					io.to(room).emit("chat", { message: `${playersinRoom[0].name} is the Admin now`, type: "admin" });
 					resolve({ status: true, playerremoved, rooms });
 				} else {
-					const newrooms = rooms.filter((rm) => rm !== room);
+					const newrooms = rooms.filter((rm) => rm.name !== room);
 					socket.emit("update_roomList", newrooms);
 					rooms = newrooms;
 					resolve({ status: true, playerremoved, rooms });
@@ -124,12 +124,12 @@ class GamesRoom {
 	 */
 	startGame = (io, room, Tetrimios) => {
 		return new Promise((resolve, reject) => {
-			io.to(room).emit("startGame", Tetrimios);
+			io.to(room.name).emit("startGame", Tetrimios);
 		});
 	};
 	newTetriminos = (io, room, Tetrimios) => {
 		return new Promise((resolve, reject) => {
-			io.to(room).emit("newTetriminos", Tetrimios);
+			io.to(room.name).emit("newTetriminos", Tetrimios);
 		});
 	};
 	/*
@@ -137,7 +137,7 @@ class GamesRoom {
 	 */
 	sendMessage = (io, data) => {
 		return new Promise((resolve, reject) => {
-			io.to(data.room).emit("chat", { name: data.name, message: data.message, type: data.type });
+			io.to(data.room.name).emit("chat", { name: data.name, message: data.message, type: data.type });
 			resolve(true);
 		});
 	};
@@ -146,7 +146,7 @@ class GamesRoom {
 	*/
 	sendStage = (io, room, stage, username) => {
 		return new Promise((resolve, reject) => {
-			io.to(room).emit("getstages", { stage, username });
+			io.to(room.name).emit("getstages", { stage, username });
 		});
 	}
 	/*
@@ -154,7 +154,7 @@ class GamesRoom {
 	*/
 	checkStages = (io, Stages, stage, room) => {
 		return new Promise((resolve, reject) => {
-			io.to(room).emit("updateStages", { Stages });
+			io.to(room.name).emit("updateStages", { Stages });
 
 		})
 	}

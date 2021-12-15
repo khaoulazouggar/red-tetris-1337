@@ -59,6 +59,7 @@ const Socketscapsule = (props) => {
       props.getChatMessages(message);
     });
 
+    
     // Disconnect Listener
     socket.on("disconnect", () => {
       console.log("disconnected");
