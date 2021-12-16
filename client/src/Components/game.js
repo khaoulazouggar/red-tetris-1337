@@ -184,7 +184,7 @@ function Game(props) {
 				drop();
 			} else if (keyCode === 38) {
 				playerRotate(stage, 1);
-			} else if (keyCode === 32) {
+			} else if (keyCode === 32 && submited) {
 				hardDrop();
 			}
 		}
