@@ -57,13 +57,24 @@ io.on("connection", async (socket) => {
 			player.updatePlayer(io, socket, data, players)
 				.then(res => {
 					players = res
-					const rm = rooms.find(room => room === data.room)
+					const rm = rooms.find(room => room.name === data.room)
+
 					if (rm === undefined) {
 						rooms = [...rooms, { name: data.room, state: false, mode: "solo", maxplayers: 1, players: 1 }];
 						Games.createRoom(io, socket, data.room, players)
+						io.emit("update_rooms", rooms)
+					}
+					else if (rm.mode === "batlle" && (rm.players < 5 && rm.state === false)) {
+						console.log("................. rooom data ..................");
+						console.log(rm);
+						console.log("................. rooom data ..................");
+						Games.joinRoom(io, socket, rm.name, players);
+						// if (rm.mode === "batlle" && (rm.players < 5 && rm.state === false))
+
 					}
 					else {
-						Games.joinRoom(io, socket, data.room, players);
+						console.log("+++++++++++++++ madkhelch +++++++++++");
+						io.to(socket.id).emit("joined_denided")
 					}
 				})
 	})

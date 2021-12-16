@@ -167,7 +167,7 @@ class GamesRoom {
 	};
 	newTetriminos = (io, room, Tetrimios) => {
 		return new Promise((resolve, reject) => {
-			io.to(room.name).emit("newTetriminos", Tetrimios);
+			io.to(room).emit("newTetriminos", Tetrimios);
 		});
 	};
 	/*

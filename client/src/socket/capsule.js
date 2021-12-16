@@ -66,6 +66,10 @@ const Socketscapsule = (props) => {
       alert("rooom full")
     })
 
+    // joined room access
+    socket.on("joined_denided", () => {
+      window.location.href = `${window.location.origin}/#`;
+    })
     // Update rooms details
     socket.on("update_rooms", async (rooms) => {
       props.updateRoomList(rooms)
