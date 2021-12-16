@@ -57,6 +57,18 @@ export const getRooms = () => {
 			});
 	}
 }
+/*
+** Update the room list
+*/
+
+export const updateRoomList = (rooms) => {
+	return (dispatch) => {
+		dispatch({
+			type: "SET_ROOMS",
+			rooms
+		})
+	}
+}
 
 /*
 ** Get room players List

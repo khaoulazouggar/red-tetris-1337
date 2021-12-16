@@ -134,6 +134,7 @@ class GamesRoom {
 					const newrooms = rooms.filter((rm) => rm.name !== room);
 					socket.emit("update_roomList", newrooms);
 					rooms = newrooms;
+					io.emit("update_rooms", rooms)
 					resolve({ status: true, playerremoved, rooms });
 				}
 			} else {
@@ -194,7 +195,13 @@ class GamesRoom {
 	*/
 	updateroomMode = (io, data, rooms) => {
 		return new Promise((resolve, reject) => {
-			
+			const room = rooms.filter(room => room.name === data.roomName);
+			room[0].mode = data.mode;
+			if (data.mode === "batlle")
+				room[0].maxplayers = 5
+			else
+				room[0].maxplayers = 1
+			io.emit("update_rooms", rooms)
 		})
 	}
 }

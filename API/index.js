@@ -85,9 +85,7 @@ io.on("connection", async (socket) => {
 	socket.on("create_room", async (data) => {
 		rooms = [...rooms, { name: data, state: true, mode: "solo", maxplayers: 1, players: 1 }];
 		Games.createRoom(io, socket, data, players)
-			.then(() => {
-				io.emit("room_created", data);
-			})
+		io.emit("update_rooms", rooms)
 	});
 	socket.on("join_room", (data) => {
 		Games.joinRoom(io, socket, data, rooms, players);
@@ -124,9 +122,8 @@ io.on("connection", async (socket) => {
 		Games.checkStages(io, data.Stages, data.stage, data.room)
 	})
 
-
 	socket.on("updateroomMode", async data => {
-		console.log(data);
+		Games.updateroomMode(io, data, rooms)
 	})
 });
 

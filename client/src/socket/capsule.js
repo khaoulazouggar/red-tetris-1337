@@ -10,7 +10,8 @@ import {
   setStages,
   updateStages,
   userExists,
-  deleteUserfromStages
+  deleteUserfromStages,
+  updateRoomList
 } from "../redux/actions/sockets/socketsActions";
 import { socket } from "./socket";
 
@@ -25,6 +26,8 @@ const Socketscapsule = (props) => {
 
     socket.on("disconnect", () => {
       console.log("disconnected");
+      window.location.href = `${window.location.origin}/`;
+      props.clearAllState();
     });
 
     socket.on("clearStages", data => {
@@ -62,12 +65,12 @@ const Socketscapsule = (props) => {
     socket.on("room_full", () => {
       alert("rooom full")
     })
-    
-    // Disconnect Listener
-    socket.on("disconnect", () => {
-      console.log("disconnected");
-      props.clearAllState();
-    });
+
+    // Update rooms details
+    socket.on("update_rooms", async (rooms) => {
+      props.updateRoomList(rooms)
+    })
+
     // Clean up the event listeners
     return () => {
 
@@ -77,6 +80,7 @@ const Socketscapsule = (props) => {
       socket.off("getstages");
       socket.off("roomPlayers");
       socket.off("chat");
+      socket.off("update_rooms")
       socket.off("disconnect");
     };
   }, [props]);
@@ -91,6 +95,6 @@ const mapStateToProps = (state) => ({
   roomname: state.sockets.roomname,
 });
 
-const mapDispatchToProps = { StartGame, newTetriminos, getRoomPlayerslist, getChatMessages, clearAllState, setStages, updateStages, userExists, deleteUserfromStages };
+const mapDispatchToProps = { StartGame, newTetriminos, getRoomPlayerslist, getChatMessages, clearAllState, setStages, updateStages, userExists, deleteUserfromStages, updateRoomList };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Socketscapsule);
