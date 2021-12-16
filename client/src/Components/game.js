@@ -38,7 +38,9 @@ function Game(props) {
 		nextPiece,
 		resetPlayer,
 		gameOver,
-		start
+		start,
+		stages, 
+		userName
 	);
 
 	const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
@@ -56,11 +58,10 @@ function Game(props) {
 
 	// Start Game effect
 	useEffect(() => {
-		console.log("gameOver", gameOver);
 		console.log("gameStart", gameStart);
+		console.log("gameOver", gameOver);
 		if (gameStart) {
 			if (gameOver) {
-				console.log("bdina");
 				setStage(createStage());
 				setNextStage(createStage(4, 4));
 				resetPlayer();
@@ -88,9 +89,9 @@ function Game(props) {
 	}, [stage]);
 	//Get Tetriminos effect
 	useEffect(() => {
-		if (tetriminos.length > 0 && !gameStarted) {
+		if (tetriminos.length > 0) {
 			setGameStart(true);
-			setgameStarted(true);
+			// setgameStarted(true);
 			setgetTetrimino(true);
 		}
 		return () => { };
@@ -102,7 +103,6 @@ function Game(props) {
 			socket.emit("newTetriminos", { room: props.data.roomName });
 			setConcatTetriminos(false);
 		}
-		console.log("tetriminos", tetriminos);
 	}, [concatTetriminos]);
 
 	// Set focus on the game
@@ -114,13 +114,12 @@ function Game(props) {
 
 	// Solo Or Multiplayer
 	function handleChange(event) {
-		console.log(event.target.value);
 		props.data.setmode(event.target.value);
+		socket.emit("updateroomMode", { mode: event.target.value, roomName: props.data.roomName });
 	}
 
 	//Get Tetriminos for the first time
 	function startgame(e) {
-		console.log("startgame", getTetrimino);
 		if (e.key === "Enter" && submited) {
 			if (!getTetrimino) {
 				socket.emit("startgame", { room: props.data.roomName });
@@ -205,7 +204,6 @@ function Game(props) {
 								stage.username !== userName && (
 									<div style={{ position: "relative", margin: "10px" }} key={i}>
 										<span>{stage.username}</span>
-										{console.log("Salam ", stage.username)}
 										<PlayersStage stage={stage.stage} />
 										<div className="players-overlay"></div>
 									</div>
