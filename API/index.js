@@ -59,7 +59,7 @@ io.on("connection", async (socket) => {
 					players = res
 					const rm = rooms.find(room => room === data.room)
 					if (rm === undefined) {
-						rooms = [...rooms, data.room];
+						rooms = [...rooms, { name: data.room, state: false, mode: "solo", maxplayers: 1, players: 1 }];
 						Games.createRoom(io, socket, data.room, players)
 					}
 					else {
@@ -83,7 +83,7 @@ io.on("connection", async (socket) => {
 		io.emit("message", data);
 	});
 	socket.on("create_room", async (data) => {
-		rooms = [...rooms, { name: data, state: true, mode: "solo", maxplayers: 1, players: 1 }];
+		rooms = [...rooms, { name: data, state: false, mode: "solo", maxplayers: 1, players: 1 }];
 		Games.createRoom(io, socket, data, players)
 		io.emit("update_rooms", rooms)
 	});
@@ -103,6 +103,7 @@ io.on("connection", async (socket) => {
 			if (user.admin) {
 				const tetriminos = await tetrimios.getTetriminos();
 				Games.startGame(io, room, tetriminos);
+				io.emit("update_rooms", rooms)
 			} else {
 				io.to(socket.id).emit("wait_admin");
 			}

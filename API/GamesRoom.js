@@ -96,11 +96,13 @@ class GamesRoom {
 			this.getroomUsers(io, room, players).then((users) => {
 				if (users.length < 5) {
 					const player = players.filter((plyr) => plyr.socketId === socket.id);
-					player[0].room = room;
-					socket.join(room);
-					this.getClient(io, room, players);
-					console.log("players in room", players);
-					io.to(room).emit("chat", { message: `${player[0]?.name} joined ${room}`, type: "joined" });
+					player[0].room = room_data.name;
+					socket.join(room_data.name);
+					this.getClient(io, room_data.name, players);
+					console.log("players in room_data.name", players);
+					io.to(room_data.name).emit("chat", { message: `${player[0]?.name} joined ${room_data.name}`, type: "joined" });
+					room_data.players += 1;
+					io.emit("update_rooms", rooms)
 				}
 				else {
 					io.to(socket.id).emit("room_full")
@@ -123,11 +125,14 @@ class GamesRoom {
 				io.to(room).emit("chat", { message: `${playerremoved.name} Left the room`, type: "left" });
 				io.to(room).emit("clearStages", { username: playerremoved.name });
 				const player = players.filter((plyr) => plyr.socketId === socket.id);
+				const room_data = rooms.find(rm => rm.name === room);
 				player[0].admin = false;
 				player[0].room = "";
+				room_data.players -= 1
 				const playersinRoom = players.filter((plyr) => plyr.room === room);
 				if (Admin && playersinRoom.length > 0) {
 					playersinRoom[0].admin = true;
+					io.emit("update_rooms", rooms)
 					io.to(room).emit("chat", { message: `${playersinRoom[0].name} is the Admin now`, type: "admin" });
 					resolve({ status: true, playerremoved, rooms });
 				} else {
@@ -156,6 +161,7 @@ class GamesRoom {
 	 */
 	startGame = (io, room, Tetrimios) => {
 		return new Promise((resolve, reject) => {
+			room.state = true;
 			io.to(room.name).emit("startGame", Tetrimios);
 		});
 	};
@@ -169,7 +175,7 @@ class GamesRoom {
 	 */
 	sendMessage = (io, data) => {
 		return new Promise((resolve, reject) => {
-			io.to(data.room.name).emit("chat", { name: data.name, message: data.message, type: data.type });
+			io.to(data.room).emit("chat", { name: data.name, message: data.message, type: data.type });
 			resolve(true);
 		});
 	};
