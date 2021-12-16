@@ -65,15 +65,10 @@ io.on("connection", async (socket) => {
 						io.emit("update_rooms", rooms)
 					}
 					else if (rm.mode === "batlle" && (rm.players < 5 && rm.state === false)) {
-						console.log("................. rooom data ..................");
-						console.log(rm);
-						console.log("................. rooom data ..................");
-						Games.joinRoom(io, socket, rm.name, players);
-						// if (rm.mode === "batlle" && (rm.players < 5 && rm.state === false))
+						Games.joinRoom(io, socket, rm.name,rooms, players);
 
 					}
 					else {
-						console.log("+++++++++++++++ madkhelch +++++++++++");
 						io.to(socket.id).emit("joined_denided")
 					}
 				})
@@ -127,7 +122,9 @@ io.on("connection", async (socket) => {
 	})
 
 	socket.on("Stage", (data) => {
-		Games.sendStage(io, data.roomName, data.stage, data.username);
+		const player = players.find(p => p.name === data.username)
+		if (player && player.room === data.roomName)
+			Games.sendStage(io, data.roomName, data.stage, data.username);
 	});
 
 	socket.on("checkStages", async (data) => {

@@ -87,6 +87,7 @@ const Socketscapsule = (props) => {
       socket.off("chat");
       socket.off("update_rooms")
       socket.off("joined_denided");
+      socket.off("wait_admin")
       socket.off("disconnect");
     };
   }, [props]);

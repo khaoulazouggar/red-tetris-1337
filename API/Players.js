@@ -20,7 +20,7 @@ class Players {
 		return players;
 	};
 	deletePlayer = async (playerremoved, players) => {
-		const newplayers = await players.filter((player) => player.socketId !== playerremoved.socketId);
+		const newplayers = await players.filter((player) => player.socketId !== playerremoved?.socketId);
 		return newplayers;
 	};
 	updatePlayer = async (io, socket, data, players) => {
