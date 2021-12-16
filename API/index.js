@@ -121,8 +121,11 @@ io.on("connection", async (socket) => {
 	});
 
 	socket.on("checkStages", async (data) => {
-
 		Games.checkStages(io, data.Stages, data.stage, data.room)
+	})
+
+	socket.on("change_room_mode", async (data) => {
+		Games.updateroomMode(io, data, rooms)
 	})
 });
 
