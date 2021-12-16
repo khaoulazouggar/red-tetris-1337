@@ -24,8 +24,8 @@ function Chat(props) {
           room: props.data.roomName,
           type: "chat",
         });
-        setmessage("");
       }
+      setmessage("");
     }
   };
   return (

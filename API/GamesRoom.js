@@ -184,7 +184,7 @@ class GamesRoom {
 	*/
 	sendStage = (io, room, stage, username) => {
 		return new Promise((resolve, reject) => {
-			io.to(room.name).emit("getstages", { stage, username });
+			io.to(room).emit("getstages", { stage, username });
 		});
 	}
 	/*
@@ -192,7 +192,7 @@ class GamesRoom {
 	*/
 	checkStages = (io, Stages, stage, room) => {
 		return new Promise((resolve, reject) => {
-			io.to(room.name).emit("updateStages", { Stages });
+			io.to(room).emit("updateStages", { Stages });
 
 		})
 	}
