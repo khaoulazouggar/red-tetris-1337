@@ -90,9 +90,6 @@ class GamesRoom {
 	joinRoom = (io, socket, room, rooms, players) => {
 		return new Promise((resolve, reject) => {
 			const room_data = rooms.find(rm => rm.name === room)
-			console.log("----------------------------room data ---------------------");
-			console.log(room_data);
-			console.log("----------------------------room data ---------------------");
 			this.getroomUsers(io, room, players).then((users) => {
 				if (users.length < 5) {
 					const player = players.filter((plyr) => plyr.socketId === socket.id);

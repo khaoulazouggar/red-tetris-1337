@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import Stage from "../Components/Stage";
 import {
   StartGame,
   newTetriminos,
@@ -65,10 +64,13 @@ const Socketscapsule = (props) => {
     socket.on("room_full", () => {
       alert("rooom full")
     })
-
+    // Just admin can start the game
+    socket.on("wait_admin", () => {
+      alert("Wait Admin")
+    })
     // joined room access
     socket.on("joined_denided", () => {
-      window.location.href = `${window.location.origin}/#`;
+      window.location.href = `${window.location.origin}/`;
     })
     // Update rooms details
     socket.on("update_rooms", async (rooms) => {
@@ -77,7 +79,6 @@ const Socketscapsule = (props) => {
 
     // Clean up the event listeners
     return () => {
-
       socket.off("useralready_exist")
       socket.off("startGame");
       socket.off("newTetriminos");
@@ -85,6 +86,7 @@ const Socketscapsule = (props) => {
       socket.off("roomPlayers");
       socket.off("chat");
       socket.off("update_rooms")
+      socket.off("joined_denided");
       socket.off("disconnect");
     };
   }, [props]);
