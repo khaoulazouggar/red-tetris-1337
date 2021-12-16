@@ -175,7 +175,7 @@ function Game(props) {
 
 	// Move the tetrimino
 	const move = ({ keyCode }) => {
-		if (!gameOver) {
+		if (!gameOver && submited) {
 			if (keyCode === 37) {
 				movePlayer(-1);
 			} else if (keyCode === 39) {
@@ -184,7 +184,7 @@ function Game(props) {
 				drop();
 			} else if (keyCode === 38) {
 				playerRotate(stage, 1);
-			} else if (keyCode === 32 && submited) {
+			} else if (keyCode === 32) {
 				hardDrop();
 			}
 		}
