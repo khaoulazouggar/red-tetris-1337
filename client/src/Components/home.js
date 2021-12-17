@@ -7,6 +7,10 @@ import { ToastContainer } from "react-toastify";
 import { socket } from "../socket/socket";
 import { connect } from "react-redux";
 import { clearChatMessages, newPLayer, newRoom, newTetriminos } from "../redux/actions/sockets/socketsActions";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faVolumeUp } from "@fortawesome/free-solid-svg-icons";
+import { faVolumeMute } from "@fortawesome/free-solid-svg-icons";
+import sound from "../assets/tetrisSound.mp3";
 
 function Home(props) {
   const { clearChatMessages, stages, newPLayer, newRoom, newTetriminos } = props;
@@ -16,12 +20,10 @@ function Home(props) {
   const [roomName, setroomName] = useState("");
   const [mode, setmode] = useState("solo");
   const [start, setstart] = useState(true);
+  // Sound Effect
+  const [Sound, setSound] = useState(false);
+  const [audio] = useState(new Audio(sound));
 
-  useEffect(() => {
-    console.log("---------------------------------------------------------------------------------");
-    console.log(start);
-    console.log("---------------------------------------------------------------------------------");
-  }, [start]);
   useEffect(() => {
     if (window.location.hash) {
       const hash = window.location.hash.substring(1);
@@ -62,7 +64,7 @@ function Home(props) {
             <button
               className="home-button"
               onClick={() => {
-				newTetriminos([],[]);
+                newTetriminos([], []);
                 setstart(true);
                 setcreated(false);
                 setclicked(1);
@@ -79,7 +81,32 @@ function Home(props) {
           )}
         </div>
         <h1 className="title">Tetris</h1>
-        <div className="name-player">{clicked ? username : ""}</div>
+        <div className="sound-div" style={{ width: "33%" }}>
+          {!start ? (
+            Sound ? (
+              <div
+                onClick={() => {
+                  setSound(false);
+                  audio.pause();
+                }}
+              >
+                <FontAwesomeIcon icon={faVolumeUp} className="sound-icon" />
+              </div>
+            ) : (
+              <div
+                onClick={() => {
+                  setSound(true);
+                  audio.play();
+                }}
+              >
+                <FontAwesomeIcon icon={faVolumeMute} className="sound-icon" />
+              </div>
+            )
+          ) : 
+            audio.pause()
+          }
+          <div className="name-player">{clicked ? username : ""}</div>
+        </div>
       </div>
       {clicked === 1 ? (
         <Room data={{ created, setcreated, roomName, setroomName, mode, start }} />
@@ -89,7 +116,7 @@ function Home(props) {
         ""
       )}
       {created ? (
-        <Game data={{ clicked, setclicked, username, setusername, roomName, setroomName, setmode, start, setstart }} />
+        <Game data={{ clicked, setclicked, username, setusername, roomName, setroomName, setmode, start, setstart, setSound , audio}} />
       ) : (
         ""
       )}

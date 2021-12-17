@@ -13,6 +13,8 @@ import PlayersStage from "./PlayersStage";
 import { socket } from "../socket/socket";
 import { toast } from "react-toastify";
 import { connect } from "react-redux";
+import hard from "../assets/hardDrop.mp3";
+import moove from "../assets/move.mp3";
 
 function Game(props) {
 	const { tetriminos, stages, userName } = props;
@@ -29,7 +31,8 @@ function Game(props) {
 	const [gameStart, setGameStart] = useState(false);
 	const [gameStarted, setgameStarted] = useState(false);
 	const [firstDrop, setfirstDrop] = useState(1);
-
+	const [audio] = useState(new Audio(hard));
+	const [moved] = useState(new Audio(moove));
 	// Custom Hooks
 	const [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate, concatTetriminos, setConcatTetriminos] =
 		usePlayer(setGameOver, setstart, setDropTime, tetriminos, setgetTetrimino);
@@ -77,6 +80,8 @@ function Game(props) {
 				setScore(0);
 				setLevel(0);
 				setRows(0);
+				props.data.setSound(true);
+				props.data.audio.play();
 			}
 			setstart(false);
 			setGameOver(false);
@@ -168,6 +173,7 @@ function Game(props) {
 
 	// Hard Drop the tetrimino
 	const hardDrop = () => {
+		audio.play();
 		let tmp = 0;
 		while (!checkCollision(player, stage, { x: 0, y: tmp })) tmp += 1;
 		// console.log(tmp);
@@ -178,12 +184,16 @@ function Game(props) {
 	const move = ({ keyCode }) => {
 		if (!gameOver && submited) {
 			if (keyCode === 37) {
+				moved.play();
 				movePlayer(-1);
 			} else if (keyCode === 39) {
+				moved.play();
 				movePlayer(1);
 			} else if (keyCode === 40) {
+				moved.play();
 				drop();
 			} else if (keyCode === 38) {
+				moved.play();
 				playerRotate(stage, 1);
 			} else if (keyCode === 32) {
 				hardDrop();

@@ -62,7 +62,7 @@ const Socketscapsule = (props) => {
       props.getChatMessages(message);
     });
 
-    socket.on("room_full", () => {
+    socket.on("wait admin", () => {
       // alert("rooom full")
       toast("This room is Full", {
 				position: "top-right",

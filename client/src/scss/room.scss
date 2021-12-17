@@ -485,6 +485,17 @@
   transition: opacity 0.2s ease 0s;
 }
 
+.sound-div{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
+.sound-icon{
+  font-size: 1.3em;
+  cursor: pointer;
+  color: white;
+}
 // :root{
 //   --toastify-font-family: ArcadeClassic;
 // }
