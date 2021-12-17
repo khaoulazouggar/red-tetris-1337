@@ -39,8 +39,9 @@ function Game(props) {
 		resetPlayer,
 		gameOver,
 		start,
-		stages, 
-		userName
+		stages,
+		userName,
+		roomName
 	);
 
 	const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
@@ -214,6 +215,13 @@ function Game(props) {
 				</div>
 			</div>
 			<div className="left-field game" data-aos="fade-down" data-aos-duration="2000">
+				{/* {stages.map((stage, i) => {
+					return (
+						stage.username === userName && (
+							<Board data={{ start, setstart, stage: stage.stage, gameOver }} />
+						)
+					);
+				})} */}
 				<Board data={{ start, setstart, stage, gameOver }} />
 			</div>
 

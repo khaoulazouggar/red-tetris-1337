@@ -89,13 +89,7 @@ class GamesRoom {
 	 */
 	joinRoom = (io, socket, room, rooms, players) => {
 		return new Promise((resolve, reject) => {
-			console.log("----------------------Rooms--------------------------");
-			console.log(rooms);
-			console.log("----------------------Rooms--------------------------");
 			const room_data = rooms.find(rm => rm.name === room)
-			console.log("----------------------Room Data--------------------------");
-			console.log(room_data);
-			console.log("----------------------Room Data--------------------------");
 			this.getroomUsers(io, room, players).then((users) => {
 				if (users.length < 5) {
 					const player = players.filter((plyr) => plyr.socketId === socket.id);
@@ -131,6 +125,7 @@ class GamesRoom {
 				const room_data = rooms.find(rm => rm.name === room);
 				player[0].admin = false;
 				player[0].room = "";
+				player[0].gameOver = false;
 				room_data.players -= 1
 				const playersinRoom = players.filter((plyr) => plyr.room === room);
 				if (Admin && playersinRoom.length > 0) {

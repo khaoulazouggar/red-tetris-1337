@@ -14,6 +14,7 @@ class Players {
 				socketId,
 				admin: false,
 				room: "",
+				gameOver: false,
 			});
 			io.to(socketId).emit("useralready_exist", { res: false })
 		}
@@ -31,6 +32,7 @@ class Players {
 				socketId: socket.id,
 				admin: false,
 				room: "",
+				gameOver: false,
 			});
 			resolve(newplayers)
 		});

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { checkCollision, createStage, STAGE_HEIGHT } from "../Components/gameHelpers";
+import { socket } from "../socket/socket";
 
-export const useStage = (player, nextPiece, resetPlayer, gameOver, start, stages, userName) => {
+export const useStage = (player, nextPiece, resetPlayer, gameOver, start, stages, userName, roomName) => {
   const [stage, setStage] = useState(createStage());
   const [nextStage, setNextStage] = useState(createStage(4, 4));
   const [rowsCleared, setRowsCleared] = useState(0);
@@ -60,6 +61,7 @@ export const useStage = (player, nextPiece, resetPlayer, gameOver, start, stages
             let wall = new Array(10).fill(["Wall", "merged"]);
             stage.stage.push(wall);
             stage.stage.shift();
+            socket.emit("Stage", {stage: stage.stage, roomName, username: stage.username });
           }
         }
       });
@@ -93,7 +95,7 @@ export const useStage = (player, nextPiece, resetPlayer, gameOver, start, stages
 
     // Here are the updates
     if (!start) setStage((prev) => updateStage(prev));
-  }, [player.collided, player.pos.x, player.pos.y, player.tetromino, resetPlayer, nextPiece, nextStage, gameOver]);
+  }, [player.collided, player.pos.x, player.pos.y, player.tetromino, resetPlayer, nextPiece, nextStage, gameOver, roomName]);
 
   return [stage, nextStage, setStage, setNextStage, rowsCleared];
 };
