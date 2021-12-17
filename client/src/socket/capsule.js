@@ -13,6 +13,7 @@ import {
   updateRoomList
 } from "../redux/actions/sockets/socketsActions";
 import { socket } from "./socket";
+import { toast } from "react-toastify";
 
 const Socketscapsule = (props) => {
   const { tetriminos, Stages, roomname } = props;
@@ -62,11 +63,29 @@ const Socketscapsule = (props) => {
     });
 
     socket.on("room_full", () => {
-      alert("rooom full")
+      // alert("rooom full")
+      toast("This room is Full", {
+				position: "top-right",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+			});
     })
     // Just admin can start the game
     socket.on("wait_admin", () => {
-      alert("Wait Admin")
+      // alert("Wait Admin")
+      toast("Wait until admin start the game", {
+				position: "top-right",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+			});
     })
     // joined room access
     socket.on("joined_denided", () => {
