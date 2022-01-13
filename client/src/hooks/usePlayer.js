@@ -1,8 +1,9 @@
 import { useState, useCallback } from "react";
 import { TETROMINOS } from "../Components/tetriminos";
 import { STAGE_WIDTH, checkCollision } from "../Components/gameHelpers";
+import { socket } from "../socket/socket";
 
-export const usePlayer = (setGameOver, setstart, setDropTime, tetriminos, setgetTetrimino) => {
+export const usePlayer = (setGameOver, setstart, setDropTime, tetriminos, setgetTetrimino, userName, roomName, gameOverAction) => {
   const [concatTetriminos, setConcatTetriminos] = useState(false);
   const [player, setPlayer] = useState({
     pos: { x: 0, y: 0 },
@@ -26,20 +27,20 @@ export const usePlayer = (setGameOver, setstart, setDropTime, tetriminos, setget
   function playerRotate(stage, dir) {
     const clonedPlayer = JSON.parse(JSON.stringify(player));
     if (clonedPlayer.tetromino.length === 4) {
-        if (clonedPlayer.tetromino[0][0] === "I") {
-          clonedPlayer.tetromino = [
-            [0, "I", 0, 0],
-            [0, "I", 0, 0],
-            [0, "I", 0, 0],
-            [0, "I", 0, 0],
-          ];
-        } else {
-          clonedPlayer.tetromino = [
-            ["I", "I", "I", "I"],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0],
-          ];
+      if (clonedPlayer.tetromino[0][0] === "I") {
+        clonedPlayer.tetromino = [
+          [0, "I", 0, 0],
+          [0, "I", 0, 0],
+          [0, "I", 0, 0],
+          [0, "I", 0, 0],
+        ];
+      } else {
+        clonedPlayer.tetromino = [
+          ["I", "I", "I", "I"],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0],
+        ];
       }
     } else clonedPlayer.tetromino = rotate(clonedPlayer.tetromino, dir);
 
@@ -82,13 +83,19 @@ export const usePlayer = (setGameOver, setstart, setDropTime, tetriminos, setget
             collided: false,
           });
         } else {
-          setPlayer({
-            pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
-            tetromino: [tetris.tetromino[0][0] === "I" ? tetris.tetromino[0] : tetris.tetromino[1]],
-            collided: false,
+          if (stage[0][3][0] === 0 && stage[0][4][0] === 0 && stage[0][5][0] === 0 && stage[0][6][0] === 0) {
+            setPlayer({
+              pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
+              tetromino: [tetris.tetromino[0][0] === "I" ? tetris.tetromino[0] : tetris.tetromino[1]],
+              collided: false,
+            });
+          }
+          socket.emit("Game_over", {
+            room: roomName,
+            userName,
           });
-          console.log("GAME OVER!!! form resetPlayer");
           setGameOver(true);
+          gameOverAction()
           setstart(true);
           setDropTime(null);
           setgetTetrimino(false);
@@ -107,12 +114,11 @@ export const usePlayer = (setGameOver, setstart, setDropTime, tetriminos, setget
         collided: false,
       });
       tetriminos.shift();
-      // console.log(tetriminos.length);
       if (tetriminos.length === 15) {
         setConcatTetriminos(true);
       }
     },
-    [setGameOver, setstart, setDropTime, tetriminos, setgetTetrimino]
+    [setGameOver, setstart, setDropTime, tetriminos, setgetTetrimino, userName, roomName, gameOverAction]
   );
 
   return [player, nextPiece, updatePlayerPos, resetPlayer, playerRotate, concatTetriminos, setConcatTetriminos];

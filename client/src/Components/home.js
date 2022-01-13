@@ -20,15 +20,21 @@ function Home(props) {
   const [roomName, setroomName] = useState("");
   const [mode, setmode] = useState("solo");
   const [start, setstart] = useState(true);
-  // Sound Effect
   const [Sound, setSound] = useState(false);
   const [audio] = useState(new Audio(sound));
 
+  //Play sound when its ended
+  useEffect(() => {
+    audio.addEventListener("ended", () => audio.play());
+  }, [audio]);
+
+  //Handle window location hash
   useEffect(() => {
     if (window.location.hash) {
       const hash = window.location.hash.substring(1);
       const regex = /^[a-zA-Z0-9]{1,12}[[][a-zA-Z0-9]{1,12}]$/;
       if (regex.test(hash)) {
+        //Hash valid
         let i = 0;
         while (i < hash.length) {
           if (hash[i] === "[") {
@@ -46,10 +52,11 @@ function Home(props) {
           i++;
         }
       } else {
+        //Hash is not valid
         if (clicked === 0) window.location.href = `${window.location.origin}/#`;
       }
     } else {
-      // console.log("no hash");
+      //No hash
       if (username && roomName && created) {
         window.location.href = `${window.location.origin}/#${roomName}[${username}]`;
       }
@@ -83,8 +90,9 @@ function Home(props) {
         <h1 className="title">Tetris</h1>
         <div className="sound-div" style={{ width: "33%" }}>
           {!start ? (
-            Sound ? (
+            Sound && audio.play() ? (
               <div
+                className="sound-button"
                 onClick={() => {
                   setSound(false);
                   audio.pause();
@@ -94,6 +102,7 @@ function Home(props) {
               </div>
             ) : (
               <div
+                className="sound-button-mute"
                 onClick={() => {
                   setSound(true);
                   audio.play();
@@ -102,9 +111,9 @@ function Home(props) {
                 <FontAwesomeIcon icon={faVolumeMute} className="sound-icon" />
               </div>
             )
-          ) : 
+          ) : (
             audio.pause()
-          }
+          )}
           <div className="name-player">{clicked ? username : ""}</div>
         </div>
       </div>
@@ -116,12 +125,24 @@ function Home(props) {
         ""
       )}
       {created ? (
-        <Game data={{ clicked, setclicked, username, setusername, roomName, setroomName, setmode, start, setstart, setSound , audio}} />
+        <Game
+          data={{
+            clicked,
+            setclicked,
+            username,
+            setusername,
+            roomName,
+            setroomName,
+            setmode,
+            start,
+            setstart,
+            setSound,
+            audio,
+          }}
+        />
       ) : (
         ""
       )}
-      {/* <Game data={{clicked, setclicked, username, setusername, setmode, start, setstart}}/> */}
-      {/* <Room data={{ created, setcreated, roomName, setroomName}}/> */}
       <ToastContainer />
     </div>
   );

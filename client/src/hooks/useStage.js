@@ -2,13 +2,26 @@ import { useState, useEffect } from "react";
 import { checkCollision, createStage, STAGE_HEIGHT } from "../Components/gameHelpers";
 import { socket } from "../socket/socket";
 
-export const useStage = (player, nextPiece, resetPlayer, gameOver, start, stages, userName, roomName) => {
+export const useStage = (
+  player,
+  nextPiece,
+  resetPlayer,
+  gameOver,
+  start,
+  userName,
+  roomName,
+  wall,
+  addWall
+) => {
   const [stage, setStage] = useState(createStage());
   const [nextStage, setNextStage] = useState(createStage(4, 4));
   const [rowsCleared, setRowsCleared] = useState(0);
 
   useEffect(() => {
+
     setRowsCleared(0);
+
+    //Sweep completed rows
     const sweepRows = (newStage) =>
       newStage.reduce((ack, row) => {
         if (row.findIndex((cell) => cell[0] === 0 || cell[0] === "Wall") === -1) {
@@ -29,7 +42,6 @@ export const useStage = (player, nextPiece, resetPlayer, gameOver, start, stages
       while (shadow < STAGE_HEIGHT && !checkCollision(player, stage, { x: 0, y: shadow })) {
         shadow++;
       }
-      //   console.log(shadow);
       if (shadow) {
         player.tetromino.forEach((row, y) => {
           row.forEach((value, x) => {
@@ -43,28 +55,10 @@ export const useStage = (player, nextPiece, resetPlayer, gameOver, start, stages
         });
       }
 
-      // console.log("rowsCleared", rowsCleared);
-      // //Add the wall
-      // if (rowsCleared > 0) {
-      //   console.log("here");
-      //   let wall = new Array(10).fill(["Wall", "merged"]);
-      //   newStage.push(wall);
-      //   newStage.shift();
-      // }
-
-      stages.map((stage, i) => {
-        if (rowsCleared > 0) {
-          console.log("stage", stage.username);
-          console.log("userName", userName);
-          if (stage.username !== userName) {
-            console.log("here");
-            let wall = new Array(10).fill(["Wall", "merged"]);
-            stage.stage.push(wall);
-            stage.stage.shift();
-            socket.emit("Stage", {stage: stage.stage, roomName, username: stage.username });
-          }
-        }
-      });
+      //Emit the wall
+      if (rowsCleared > 1) {
+        socket.emit("addWall", { room: roomName, userName: userName });
+      }
 
       // Then draw the tetromino
       player.tetromino.forEach((row, y) => {
@@ -90,12 +84,32 @@ export const useStage = (player, nextPiece, resetPlayer, gameOver, start, stages
         setNextStage(createStage(4, 4));
         return sweepRows(newStage);
       }
+
+      //Add the wall
+      if (wall) {
+        let wall = new Array(10).fill(["Wall", "merged"]);
+        newStage.push(wall);
+        newStage.shift();
+        addWall({ wall: false });
+      }
       return newStage;
     };
 
     // Here are the updates
     if (!start) setStage((prev) => updateStage(prev));
-  }, [player.collided, player.pos.x, player.pos.y, player.tetromino, resetPlayer, nextPiece, nextStage, gameOver, roomName]);
+  }, [
+    player.collided,
+    player.pos.x,
+    player.pos.y,
+    player.tetromino,
+    resetPlayer,
+    nextPiece,
+    nextStage,
+    gameOver,
+    roomName,
+    wall,
+    addWall,
+  ]);
 
   return [stage, nextStage, setStage, setNextStage, rowsCleared];
 };

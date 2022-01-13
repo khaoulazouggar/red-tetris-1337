@@ -133,10 +133,10 @@
   border-radius: 2px;
   min-height: 66vh;
   max-height: 73vh;
-    overflow: scroll;
+  overflow: scroll;
 }
 
-.chat::-webkit-scrollbar{
+.chat::-webkit-scrollbar {
   display: none;
 }
 
@@ -411,8 +411,8 @@
   align-items: center;
 }
 
-.list-item:hover{
-  background-color: rgba(255, 255, 255, 0.40);
+.list-item:hover {
+  background-color: rgba(255, 255, 255, 0.4);
   font-size: 1.8vh;
   transition: all 0.8s;
 }
@@ -429,12 +429,12 @@
   flex: 3 1;
 }
 
-.game-over{
-    font-size: 5vh;
-    color: white;
+.game-over {
+  font-size: 5vh;
+  color: white;
 }
 
-.players-overlay{
+.players-overlay {
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -449,11 +449,11 @@
   left: 3px;
 }
 
-.Toastify__toast{
+.Toastify__toast {
   font-family: "ArcadeClassic" !important;
 }
 
-.players-field{
+.players-field {
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -466,7 +466,7 @@
   display: none;
 }
 
-.home-button{
+.home-button {
   color: white;
   border: 0px;
   outline: none;
@@ -480,18 +480,18 @@
   cursor: pointer;
 }
 
-.home-button:hover{
+.home-button:hover {
   opacity: 1;
   transition: opacity 0.2s ease 0s;
 }
 
-.sound-div{
+.sound-div {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
 }
 
-.sound-icon{
+.sound-icon {
   font-size: 1.3em;
   cursor: pointer;
   color: white;
@@ -501,17 +501,16 @@
 // }
 
 @media only screen and (max-width: 1230px) {
-// .room-field{
-//   flex-direction: column;
-//   overflow: scroll;
-// }
+  // .room-field{
+  //   flex-direction: column;
+  //   overflow: scroll;
+  // }
 
-// .room-field::-webkit-scrollbar {
-//   display: none;
-// }
+  // .room-field::-webkit-scrollbar {
+  //   display: none;
+  // }
 
-.right-field{
-  display: none;
-}
-
+  .right-field {
+    display: none;
+  }
 }
